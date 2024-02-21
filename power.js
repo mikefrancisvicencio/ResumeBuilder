@@ -1,4 +1,3 @@
-
 class InputLog {
     constructor() {
         this.queryInputLog = [];
@@ -6,50 +5,58 @@ class InputLog {
     }
     // Method to update the queryInputLog with input values
     updateQueryInputLog() {
-        const name = document.getElementById('nameInput').value;
-        const contactInfo = document.getElementById('contactInfo').value;
-        const summaryStatement = document.getElementById('summaryStatement').value;
-        const education = document.getElementById('education').value;
-        const skills = document.getElementById('skills').value;
-
+        var name = document.getElementById('nameInput').value;
+        var phonenum = document.getElementById('phone').value; 
+        var email = document.getElementById('email').value; 
+        var summaryStatement = document.getElementById('summaryStatement').value;
+        var education = document.getElementById('education').value;
+        var skills = document.getElementById('skills').value;
+    
         // Pushing an object with all input values to the queryInputLog array
         this.queryInputLog.push({
             name: name,
-            contactInfo: contactInfo,
+            phone: phonenum, 
+            email: email, 
             summaryStatement: summaryStatement,
             education: education,
             skills: skills
         });
     }
 
-    queryName() {
-        //this.queryInputs = ["Please introduce yourself!", ""];
-    }
-    queryContactInfo() {
-        //this.queryInputs = ["How can recruiters contact you?", ""];
-    }
-    querySummaryStatement() {
-        //this.queryInputs = ["Describe who you are and highlight your values.", ""];
-    }
-    queryExperience() {
-        //this.queryInputs = ["What work related experience have you had?", ""];
-    }
-    queryEducation() {
-        //this.queryInputs = ["What education have you received to prepare you for the role that you are applying for?", ""];
-    }
-    querySkills() {
-        //this.queryInputs = ["What skills do you offer for the team you are applying for?", ""];
-    }
+
+//     queryName() {
+//         //this.queryInputs = ["Please introduce yourself!", ""];
+//     }
+//     queryContactInfo() {
+//         //this.queryInputs = ["How can recruiters contact you?", ""];
+//     }
+//     querySummaryStatement() {
+//         //this.queryInputs = ["Describe who you are and highlight your values.", ""];
+//     }
+//     queryExperience() {
+//         //this.queryInputs = ["What work related experience have you had?", ""];
+//     }
+//     queryEducation() {
+//         //this.queryInputs = ["What education have you received to prepare you for the role that you are applying for?", ""];
+//     }
+//     querySkills() {
+//         //this.queryInputs = ["What skills do you offer for the team you are applying for?", ""];
+//     }
 }
 
 class User {
     constructor(name) {
         this.isNewUser = true;
         this.resumes = [];
-        this.Name = name;
+        this.name = name;
         this.isViewer = false;
     }
-
+    changeName(newName) {
+        this.name = newName;
+    }
+    getName() {
+        return this.name;
+    }
     getResume() {}
 }
 
@@ -95,12 +102,15 @@ class Comment {
     }
 }
 
-let inputLog = new InputLog();
-
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('nextButton').addEventListener('click', function() {
+        var inputLog = new InputLog();
         inputLog.updateQueryInputLog();
+        var newUser = new User();
+        newUser.changeName(inputLog.queryInputLog[0].name);
         console.log(inputLog.queryInputLog);
+        console.log(newUser.getName());
+
     });
 });
 
