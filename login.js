@@ -7,7 +7,7 @@ import {
 
 import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
-import { resetResumeFromStorage } from "./src/app.js";
+import { resetResumeFromStorage } from "./src/storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCJAAzm3vNNOeuoJxJKmYdU6jxEaqk1NCw",
@@ -45,7 +45,6 @@ document.getElementById("registerButton").addEventListener("click", () => {
       // Clear the resume from storage
       // NOTE: here resets ALL the data in the device storage, no matter the 
       // login status. NEED TO FIX !! 
-
       resetResumeFromStorage();
       // Account created & user logged in
       alert("Account successfully created. You are now logged in.");
