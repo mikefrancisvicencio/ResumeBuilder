@@ -1,3 +1,4 @@
+// firebase authentication 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import {
   getAuth,
@@ -5,6 +6,8 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
 import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+
+import { resetResumeFromStorage } from "./src/app.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCJAAzm3vNNOeuoJxJKmYdU6jxEaqk1NCw",
@@ -17,13 +20,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+// user login 
 document.getElementById("loginButton").addEventListener("click", () => {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed in
-      window.location.href = "CoffeeMaker.html"; // Redirect to your resume builder page
+      window.location.href = "CoffeeMaker.html"; 
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -32,14 +36,21 @@ document.getElementById("loginButton").addEventListener("click", () => {
     });
 });
 
+// user register
 document.getElementById("registerButton").addEventListener("click", () => {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
   createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
+      // Clear the resume from storage
+      // NOTE: here resets ALL the data in the device storage, no matter the 
+      // login status. NEED TO FIX !! 
+
+      resetResumeFromStorage();
       // Account created & user logged in
       alert("Account successfully created. You are now logged in.");
-      window.location.href = "resumeBuilderPage.html"; // Redirect to your resume builder page
+      // Redirect to resume page
+      window.location.href = "CoffeeMaker.html"; 
     })
     .catch((error) => {
       const errorCode = error.code;

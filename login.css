@@ -1,25 +1,43 @@
+body {
+  background-image: url("Background.webp");
+  background-size: cover; /* Cover the entire page */
+
+  height: 100vh; /* Set the height to fill the screen */
+  margin: 10; /* Remove default margin */
+
+  font-family: Avenir, Helvetica, sans-serif;
+}
+
 #loginContainer {
   max-width: 300px;
   margin: auto;
   padding: 20px;
   text-align: center;
+  background-color: #f8f9fa; /* Light gray background */
   border: 1px solid #ddd;
   border-radius: 5px;
   margin-top: 100px;
 }
 
-input[type="email"], input[type="password"] {
+input[type="email"],
+input[type="password"] {
   width: 100%;
   padding: 10px;
-  margin: 10px 0;
+  margin: 2px;
   border-radius: 5px;
   border: 1px solid #ccc;
+  box-sizing: border-box;
 }
+
+input[type="password"]{
+  margin-bottom: 20px;
+}
+
 
 button {
   width: 100%;
   padding: 10px;
-  background-color: #007bff;
+  background-color: #7dc1ce;
   color: white;
   border: none;
   border-radius: 5px;
@@ -28,5 +46,5 @@ button {
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #866b56;
 }
