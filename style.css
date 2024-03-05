@@ -1,0 +1,68 @@
+body {
+    background-image: url('Background.webp');
+    background-size: cover; /* Cover the entire page */
+
+    height: 100vh; /* Set the height to fill the screen */
+    margin: 10; /* Remove default margin */
+    display: flex; /* Use Flexbox to layout children */
+    justify-content: center; /* Center children horizontally */
+    align-items: center; /* Center children vertically */
+}
+
+#resumeDisplayArea {
+    background-color: #f8f9fa; /* Light gray background */
+    border-radius: 5px; /* Rounded corners */
+    padding: 20px; /* Padding inside the area */
+    width: 816px; /* Width for 8.5 inches (8.5 * 96) */
+    height: 1056px; /* Height for 11 inches (11 * 96) */
+    margin-top: 100px; /* Space at the top */
+}
+
+#commentDisplayArea {
+    background-color: #aafda9; /* Different background color */
+    border-radius: 5px; /* Rounded corners */
+    padding: 20px; /* Padding inside the area */
+    margin-left: 20px; /* Space between resume and comments */
+    margin-top: 100px; /* Space at the top */
+    width: 300px; /* Width for the comment area */
+    height: 1056px; /* Same height as resume */
+    box-sizing: border-box; /* Include padding and border in the size */
+    overflow-y: auto; /* Enable vertical scrolling if needed */
+}
+
+.name {
+   
+    text-transform: uppercase;
+    font-size: 30px;
+}
+
+.phone, .linkedIn, .github, .email {
+    font-size: 10px;
+}
+
+.summary,.education,.skills,.projects,.experience,.projects,.certifications {
+    font-size: 15px;
+}
+
+.summary-title {
+    margin-top: 0px; /* Adjust the value as needed for spacing before the summary statement */
+}
+#editModal {
+    /* Set the width of the modal */
+    width: 80%; /* You can use px, %, or other units */
+    /* Set the height of the modal */
+    height: 80vh; /* You can use px, %, vh, or other units */
+    /* Center the modal on the screen */
+    border-radius: 5px; /* Rounded corners */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* Add a background color and padding */
+    background-color: rgb(255, 234, 188);
+    padding: 20px;
+    /* Add a box shadow for a better look */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Allow scrolling within the modal if needed */
+    overflow-y: auto;
+}
