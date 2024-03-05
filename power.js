@@ -1,27 +1,53 @@
 class InputLog {
     constructor() {
         this.queryInputLog = [];
-        console.log("InputLog created:", this);
+        this.queryInputs = [];
     }
-
+    // Method to update the queryInputLog with input values
     updateQueryInputLog() {
-        const fields = ['nameInput', 'phone', 'linkedin', 'github', 'email', 'summaryStatement', 'education', 'skills', 'projects', 'experience', 'certifications'];
-        const inputData = {};
-        fields.forEach(field => inputData[field] = document.getElementById(field).value);
-        this.queryInputLog.push(inputData);
-        console.log("InputLog updated:", this.queryInputLog);
-    }
+        var name = document.getElementById('nameInput').value;
+        var phone = document.getElementById('phone').value;
+        var linkedin = document.getElementById('linkedin').value;
+        var github = document.getElementById('github').value;
+        var email = document.getElementById('email').value;
+        var summaryStatement = document.getElementById('summaryStatement').value;
+        var education = document.getElementById('education').value;
+        var skills = document.getElementById('skills').value;
+        var projects = document.getElementById('projects').value;
+        var experience = document.getElementById('experience').value;
+        var certifications = document.getElementById('certifications').value;
 
-    generateSections() {
-        const inputData = this.queryInputLog[0];
-        return Object.keys(inputData).map((key, index) => {
-            const header = index < 5 ? "" : this.formatHeader(key);
-            return new Section(header, `<div class="${key}">${inputData[key]}</div>`);
+        // Pushing an object with all input values to the queryInputLog array
+        this.queryInputLog.push({
+            name: name,
+            phone: phone,
+            linkedin: linkedin,
+            github: github,
+            email: email,
+            summaryStatement: summaryStatement,
+            education: education,
+            skills: skills,
+            projects: projects,
+            experience: experience,
+            certifications: certifications
         });
     }
 
-    formatHeader(key) {
-        return key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+    generateSections() {
+        var sectionsArray = [];
+        var inputData = this.queryInputLog[0]; // Assuming you want to use the first set of input data
+        sectionsArray.push(new Section("", `<div class="name">${inputData.name}</div>`));
+        sectionsArray.push(new Section("", `<div class="phone">${inputData.phone}</div>`));
+        sectionsArray.push(new Section("", `<div class="linkedIn">${inputData.linkedin}</div>`));
+        sectionsArray.push(new Section("", `<div class="github">${inputData.github}</div>`));
+        sectionsArray.push(new Section("", `<div class="email">${inputData.email}</div>`));
+        sectionsArray.push(new Section("", `<div class="summary">${inputData.summaryStatement}</div>`));
+        sectionsArray.push(new Section("Your Education", `<div class="education">${inputData.education}</div>`));
+        sectionsArray.push(new Section("Your Skills", `<div class="skills">${inputData.skills}</div>`));
+        sectionsArray.push(new Section("Projects", `<div class="projects">${inputData.projects}</div>`));
+        sectionsArray.push(new Section("Experience", `<div class="experience">${inputData.experience}</div>`));
+        sectionsArray.push(new Section("Certifications", `<div class="certifications">${inputData.certifications}</div>`));
+        return sectionsArray;
     }
 }
 
@@ -31,38 +57,38 @@ class User {
         this.resumes = [];
         this.name = name;
         this.isViewer = false;
-        console.log("User created:", this);
     }
-
     changeName(newName) {
         this.name = newName;
-        console.log("User name changed:", this.name);
     }
-
     getName() {
         return this.name;
     }
+    getResume() {}
 }
 
-class StoredLog {
+class StoredLog { //Will be needed when we have a database implementation
     constructor() {
         this.Users = [];
         this.resumeIds = [];
         this.resumes = [];
-        console.log("StoredLog created:", this);
     }
-
     updateLog(user, resume) {
+        // Check if the user is already in the Users array
         if (!this.Users.some(u => u.name === user.name)) {
             this.Users.push(user);
         }
-        this.resumes.push(resume);
-        this.resumeIds.push(resume.resumeId);
-        console.log("StoredLog updated:", this);
-    }
-}
 
-const dbTemp = new StoredLog();
+        // Add the resume to the resumes array
+        this.resumes.push(resume);
+
+        // Update the resumeIds array
+        this.resumeIds.push(resume.resumeId);
+    }
+    updateUsers() {}
+    updateIds() {}
+}
+var dbTemp = new StoredLog;
 
 class Resume {
     constructor(owner, sections) {
@@ -73,73 +99,120 @@ class Resume {
         this.allowedViewers = [];
         this.sections = sections;
         this.owner = owner;
-        console.log("Resume created:", this);
     }
-
     resumeIDGenerator() {
         return Math.floor(10000 + Math.random() * 90000);
     }
+    jsPDF() {}
+    downloadPDF() {}
+    operation() {}
+    edit() {}
+    update() {}
 }
 
 class Section {
     constructor(header, content) {
         this.header = header;
         this.content = content;
-        console.log("Section created:", this);
     }
 
     generateHTML() {
-        return this.header ? `<h4>${this.header}</h4><p>${this.content}</p>` : `<div>${this.content}</div>`;
+        // If header is empty, return only content wrapped in a div
+        if (this.header === "") {
+            return `<div>${this.content}</div>`;
+        } else {
+            // If header is not empty, return header and content
+            return `<h4>${this.header}</h4><p>${this.content}</p>`;
+        }
     }
 }
+
 
 class Comment {
     constructor(user, text) {
         this.User = user;
         this.text = text;
         this.textColor = 'black';
-        console.log("Comment created:", this);
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('nextButton').addEventListener('click', () => {
-        const inputLog = new InputLog();
-        inputLog.updateQueryInputLog();
-        const newUser = new User(inputLog.queryInputLog[0].nameInput);
-        const newResume = new Resume(newUser, inputLog.generateSections());
-        dbTemp.updateLog(newUser, newResume);
-        console.log("New user and resume created:", newUser, newResume);
-    });
 
-    document.getElementById('generateResumeButton').addEventListener('click', () => {
+//Event listener for next button
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('nextButton').addEventListener('click', function() {
+        var inputLog = new InputLog();
+        inputLog.updateQueryInputLog();
+        var newUser = new User();
+        newUser.changeName(inputLog.queryInputLog[0].name);
+        var newResume = new Resume(newUser,inputLog.generateSections());
+        dbTemp.updateLog(newUser,newResume);
+        console.log(newUser.getName());
+        console.log(newResume.resumeId);
+        console.log(newResume.sections);  
+    });
+});
+
+//Event Listener for Generate Resume Button
+// Event Listener for Generate Resume Button
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('generateResumeButton').addEventListener('click', function() {
+        // Check if inputLog has any entries
         if (dbTemp.resumes.length > 0) {
-            const latestResume = dbTemp.resumes[dbTemp.resumes.length - 1];
-            const currentUser = new User(latestResume.owner.name);
+            const latestInputLog = dbTemp.resumes[dbTemp.resumes.length - 1];
+
+            // Push the User's name into the dbTemp's Users array
+            const currentUser = new User(latestInputLog.sections[0].content); // Assuming first section is name
             dbTemp.Users.push(currentUser);
-            dbTemp.resumeIds.push(latestResume.resumeId);
-            dbTemp.resumes.push(latestResume);
-            generateResumePreview(latestResume.sections, latestResume.comments);
+
+            // Push the Resume's resumeId into the dbTemp's resumeIds array
+            dbTemp.resumeIds.push(latestInputLog.resumeId);
+
+            // Push the resume object into the dbTemp's resumes array
+            dbTemp.resumes.push(latestInputLog);
+
+            // Now generate the resume preview
+            generateResumePreview(latestInputLog.sections, latestInputLog.comments);
             document.getElementById('resumeDisplayArea').style.display = 'block';
-            console.log("Generated resume:", latestResume);
         } else {
             document.getElementById('resumeContent').textContent = 'No resumes found.';
             document.getElementById('resumeDisplayArea').style.display = 'none';
         }
     });
+});
 
-    document.getElementById('addCommentButton').addEventListener('click', () => {
+// ...
+
+// Assuming we have a method that handles the creation of a new resume
+function createNewResume() {
+    var inputLog = new InputLog();
+    inputLog.updateQueryInputLog();
+    var newUser = new User(inputLog.queryInputLog[0].name); // Assuming the first input log is the name
+    var newResume = new Resume(newUser, inputLog.generateSections());
+
+    // Now update dbTemp with the new resume details
+    dbTemp.updateLog(newUser, newResume);
+
+    console.log(newUser.getName());
+    console.log(newResume.resumeId);
+    console.log(newResume.sections);
+}
+
+//Event Listener for Add Comment Button
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('addCommentButton').addEventListener('click', function() {
         if (dbTemp.resumes.length > 0) {
             const firstResume = dbTemp.resumes[0];
             const commentText = document.getElementById('comments').value || "Please let me know how I can make my resume better";
             const newComment = new Comment(new User(firstResume.owner.name), commentText);
             firstResume.comments.push(newComment);
             generateResumePreview(firstResume.sections, firstResume.comments);
-            console.log("Added comment to resume:", newComment);
         }
     });
+});
 
-    document.getElementById('addCommentToResumeButton').addEventListener('click', () => {
+//Event Listener for Add Comment to Resume Button
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('addCommentToResumeButton').addEventListener('click', function() {
         if (dbTemp.resumes.length > 0) {
             const firstResume = dbTemp.resumes[0];
             const commentText = prompt("Enter your comment:");
@@ -147,115 +220,63 @@ document.addEventListener('DOMContentLoaded', () => {
                 const newComment = new Comment(new User(firstResume.owner.name), commentText);
                 firstResume.comments.push(newComment);
                 generateResumePreview(firstResume.sections, firstResume.comments);
-                console.log("Added comment to resume:", newComment);
             }
         }
     });
-
-    document.getElementById('editSectionsButton').addEventListener('click', () => {
-        if (dbTemp.resumes.length > 0) {
-            const firstResume = dbTemp.resumes[0];
-            openEditModal(firstResume.sections, firstResume.resumeId);
-        }
-    });
-
-    const downloadButton = document.getElementById('downloadPdfButton');
-    if (downloadButton) {
-        downloadButton.addEventListener('click', downloadPDF);
-    } else {
-        console.error("Download PDF button not found.");
-    }
 });
-
-let currentEditingResumeId = null;
-
-function openEditModal(resumeSections, resumeId) {
-    currentEditingResumeId = resumeId;
-    const modal = document.getElementById('editModal');
-    const modalContent = document.getElementById('modalContent');
-    modalContent.innerHTML = '';
-    resumeSections.forEach((section, index) => {
-        const editableContent = extractTextContent(section.content);
-        const sectionDiv = document.createElement('div');
-        sectionDiv.classList.add('modal-section');
-        sectionDiv.innerHTML = index < 5 ?
-            `<label>${section.header}</label><div class="non-editable-content">${editableContent}</div>` :
-            `<label>${section.header}</label><textarea id="edit-${section.header}" rows="4" cols="50">${editableContent}</textarea>`;
-        modalContent.appendChild(sectionDiv);
-    });
-    modal.style.display = 'block';
-    attachModalEventHandlers();
-}
-
-function extractTextContent(htmlString) {
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = htmlString;
-    return tempDiv.textContent || tempDiv.innerText || "";
-}
-
-function attachModalEventHandlers() {
-    const closeButton = document.querySelector('.close');
-    const modal = document.getElementById('editModal');
-    window.onclick = (event) => {
-        if (event.target === modal || event.target === closeButton) {
-            modal.style.display = 'none';
-        }
-    };
-    const saveButton = document.getElementById('saveButton');
-    if (saveButton) {
-        saveButton.removeEventListener('click', saveModalChanges);
-        saveButton.addEventListener('click', saveModalChanges);
-    }
-}
-
-function saveModalChanges() {
-    const editingResume = dbTemp.resumes.find(resume => resume.resumeId === currentEditingResumeId);
-    if (editingResume) {
-        editingResume.sections.forEach((section, index) => {
-            if (index >= 5) {
-                const editedContentElement = document.getElementById(`edit-${section.header}`);
-                if (editedContentElement) {
-                    const className = section.content.match(/class="([^"]+)"/)[1];
-                    section.content = `<div class="${className}">${editedContentElement.value}</div>`;
-                }
-            }
-        });
-        generateResumePreview(editingResume.sections, editingResume.comments);
-    }
-    document.getElementById('editModal').style.display = 'none';
-    currentEditingResumeId = null;
-}
 
 function generateResumePreview(resumeSections, resumeComments) {
     const previewArea = document.getElementById('resumeContent');
     const commentArea = document.getElementById('commentDisplayArea');
+
+    // Clear existing content
     previewArea.innerHTML = '';
     commentArea.innerHTML = '';
+
+    // Generate sections
     resumeSections.forEach(section => {
-        previewArea.innerHTML += section.generateHTML();
+        const sectionHTML = section.generateHTML();
+        previewArea.innerHTML += sectionHTML;
     });
+
+    // Generate comments
     if (resumeComments.length > 0) {
-        const commentsHTML = resumeComments.map(comment => `<p><strong>${comment.User.getName()}:</strong> ${comment.text}</p>`).join('');
-        commentArea.innerHTML = `<div class="section"><h4>Comments:</h4>${commentsHTML}</div>`;
-        commentArea.style.display = 'block';
+        const commentsSection = document.createElement('div');
+        commentsSection.classList.add('section');
+        commentsSection.innerHTML = '<h4>Comments:</h4>';
+        resumeComments.forEach(comment => {
+            commentsSection.innerHTML += `<p><strong>${comment.User.getName()}:</strong> ${comment.text}</p>`;
+        });
+        commentArea.appendChild(commentsSection);
+        commentArea.style.display = 'block'; // Ensure the comment area is visible
     } else {
-        commentArea.style.display = 'none';
+        commentArea.style.display = 'none'; // Hide the comment area if there are no comments
     }
 }
 
+// add a function that handles Download pdf exactly how it is displayed on the document page
 function downloadPDF() {
     const jsPDF = window.jspdf.jsPDF;
+
+    // First, we ensure that the resume content is visible for html2canvas
     const resumeDisplayArea = document.getElementById('resumeDisplayArea');
     resumeDisplayArea.style.display = 'block';
+
+    // Use html2canvas to capture the content, excluding buttons
     html2canvas(resumeDisplayArea, {
-        onclone: (clonedDoc) => {
-            clonedDoc.querySelectorAll('#downloadPdfButton, #addCommentToResumeButton, #addRoasterButton, #editSectionsButton')
-                .forEach(elem => elem.style.display = 'none');
+        onclone: function(clonedDoc) {
+            // Exclude elements you don't want to render in the PDF
+            const excludeElements = clonedDoc.querySelectorAll('#downloadPdfButton, #addCommentToResumeButton, #addRoasterButton, #editSectionsButton');
+            excludeElements.forEach(elem => elem.style.display = 'none');
         },
-        scale: window.devicePixelRatio,
+        scale: window.devicePixelRatio, // Use device pixel ratio for better resolution
         windowWidth: resumeDisplayArea.scrollWidth,
         windowHeight: resumeDisplayArea.scrollHeight,
-    }).then((canvas) => {
+        x: 0,
+        y: window.pageYOffset,
+        scrollX: 0,
+        scrollY: 0
+    }).then(canvas => {
         const imgData = canvas.toDataURL('image/png');
         const pdf = new jsPDF({
             orientation: 'portrait',
@@ -264,40 +285,129 @@ function downloadPDF() {
         });
         pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
         pdf.save('resume.pdf');
+
+        // Hide the display area again if necessary
         resumeDisplayArea.style.display = 'none';
-    }).catch((error) => {
+    }).catch(error => {
         console.error('Error generating PDF: ', error);
     });
 }
-document.addEventListener('DOMContentLoaded', () => {
-    // Event listener for opening the Add Roaster modal
-    document.getElementById('addRoasterButton').addEventListener('click', () => {
-        document.getElementById('addRoasterModal').style.display = 'block';
-    });
 
-    // Event listener for closing the Add Roaster modal
-    document.querySelector('#addRoasterModal .close').addEventListener('click', function() {
-        document.getElementById('addRoasterModal').style.display = 'none';
-    });
+// Event listener for downloadPdfButton
+document.addEventListener('DOMContentLoaded', function() {
+    const downloadButton = document.getElementById('downloadPdfButton');
+    if (downloadButton) {
+        downloadButton.addEventListener('click', downloadPDF);
+    } else {
+        // Log if the button is not found
+        console.error("Download PDF button not found.");
+    }
+});
 
-    // Event listener for saving the roaster
-    document.getElementById('saveRoasterButton').addEventListener('click', function() {
-        var roasterName = document.getElementById('roasterNameInput').value;
-        if (roasterName) {
-            // Assuming you want to add the roaster to the first resume
-            if (dbTemp.resumes.length > 0) {
-                const firstResume = dbTemp.resumes[0];
-                firstResume.allowedViewers.push(roasterName);
-                console.log(`Added roaster: ${roasterName}`);
-                // Update the resume preview to display the new roaster
-                generateResumePreview(firstResume.sections, firstResume.comments);
-            }
+//Event Listener for Edit Sections Button
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('editSectionsButton').addEventListener('click', function() {
+        if (dbTemp.resumes.length > 0) {
+            const firstResume = dbTemp.resumes[0];
+            openEditModal(firstResume.sections, firstResume.resumeId);
         }
-        // Clear the input field and close the modal
-        document.getElementById('roasterNameInput').value = '';
-        document.getElementById('addRoasterModal').style.display = 'none';
     });
 });
+
+// Global variable to store the currently editing resume's ID
+var currentEditingResumeId = null;
+
+// Modified openEditModal function to accept resumeId
+function openEditModal(resumeSections, resumeId) {
+    currentEditingResumeId = resumeId; // Store the resumeId for later use
+
+    const modal = document.getElementById('editModal');
+    const modalContent = document.getElementById('modalContent');
+
+    // Clear previous content
+    modalContent.innerHTML = '';
+
+    // Populate the modal with current resume sections for editing
+    resumeSections.forEach(section => {
+        const editableContent = extractTextContent(section.content); // Function to extract only text
+
+        const sectionDiv = document.createElement('div');
+        sectionDiv.classList.add('modal-section');
+        sectionDiv.innerHTML = `
+            <label>${section.header}</label>
+            <textarea id="edit-${section.header}" rows="4" cols="50">${editableContent}</textarea>
+        `;
+        modalContent.appendChild(sectionDiv);
+    });
+
+    // Display the modal
+    modal.style.display = 'block';
+
+    // Attach event handlers for modal interactions
+    attachModalEventHandlers();
+}
+
+function extractTextContent(htmlString) {
+    // Create a new div element and set its innerHTML to the HTML string
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = htmlString;
+    // Return the text content of the div, effectively stripping out the HTML tags
+    return tempDiv.textContent || tempDiv.innerText || "";
+}
+
+function attachModalEventHandlers() {
+    // Close modal when the close button or outside the modal is clicked
+    const closeButton = document.querySelector('.close');
+    const modal = document.getElementById('editModal');
+    window.onclick = function(event) {
+        if (event.target == modal || event.target == closeButton) {
+            modal.style.display = 'none';
+        }
+    };
+
+    // Save button click event
+    const saveButton = document.getElementById('saveButton');
+    if (saveButton) {
+        saveButton.removeEventListener('click', saveModalChanges); // Remove previous event listener if exists
+        saveButton.addEventListener('click', saveModalChanges);
+    }
+}
+
+function saveModalChanges() {
+    // Find the resume with the matching resumeId in dbTemp
+    const editingResume = dbTemp.resumes.find(resume => resume.resumeId === currentEditingResumeId);
+
+    if (editingResume) {
+        editingResume.sections.forEach(section => {
+            const editedContentElement = document.getElementById(`edit-${section.header}`);
+            if (editedContentElement) {
+                // Update the section content with the new value, wrapping it in a div again
+                section.content = `<div class="${section.header.toLowerCase()}">${editedContentElement.value}</div>`;
+            }
+        });
+
+        // Re-generate the resume preview with the edited sections
+        generateResumePreview(editingResume.sections, editingResume.comments);
+    }
+
+    // Close the modal
+    document.getElementById('editModal').style.display = 'none';
+
+    // Clear the currentEditingResumeId
+    currentEditingResumeId = null;
+}
+
+function saveEditedSections(resumeSections) {
+    resumeSections.forEach(section => {
+        const sectionElement = document.getElementById(`edit-${section.header}`);
+        if (sectionElement) {
+            section.content = sectionElement.value;
+        }
+    });
+
+    // Generate the preview with the edited sections
+    generateResumePreview(resumeSections, []);
+}
 
 
 
