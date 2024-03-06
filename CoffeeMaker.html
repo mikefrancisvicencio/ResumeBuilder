@@ -7,19 +7,24 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
     />
-    <!--for popup-->
+
+    <!-- jsPDF library for generating PDF-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-    <!--library for generating PDF-->
+
+    <!-- DOMPurify 
+      sanitizes HTML and prevents XSS attacks. 
+      It seems like jsPDF expects it to be available when using the html method
+      to generate PDFs from HTML content.-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.3/purify.min.js"></script>
-    <!--sanitizes HTML and prevents XSS attacks. It seems like jsPDF expects it to be available when using the html method to generate PDFs from HTML content.-->
+
+    <!-- html2canvas -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
-    <!-- <script type="module" src="power.js"></script>JavaScript file -->
+
     <script src="power.js"></script>
-    <!--JavaScript file-->
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <!-- New User Modal -->
+    <!-- Create Resume modal -->
     <div class="modal" id="myModal">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -93,7 +98,7 @@
                 rows="3"
                 placeholder="(Your First Name) is a talented..."
               >
-As a passionate programming student, I am adept at learning new technologies and applying them to solve problems. With a strong foundation in programming concepts and languages such as Python, Java, and C++, I am eager to contribute to innovative projects. I excel in collaborative environments and am committed to continuous learning and professional growth. Seeking opportunities to leverage my skills and enthusiasm to make meaningful contributions in the field of software development.</textarea
+As a passionate programming student, I am adept at learning new technologies and applying them to solve problems. With a strong foundation in programming concepts and languages such as Python, Java, and C++, I am eager to contribute to innovative projects. Seeking opportunities to leverage my skills and enthusiasm to make meaningful contributions.</textarea
               >
             </div>
             <div class="mb-3">
@@ -126,10 +131,17 @@ Programming Languages: HTML, CSS, JavaScript, Python, Java <br> Frameworks/Libra
               <textarea
                 class="form-control"
                 id="projects"
-                rows="3"
+                rows="5"
                 placeholder="List your projects and a brief description"
               >
-Project 1: Portfolio Website - Developed a personal portfolio website using HTML, CSS, and JavaScript. <br> Project 2: Todo List App - Created a full-stack todo list application using React, Node.js, Express.js, and MongoDB.</textarea
+Project 1: Portfolio Website - Developed a personal portfolio website using HTML, CSS, and JavaScript. <br>
+  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam efficitur scelerisque sapien sit amet molestie. Phasellus vulputate nibh quis dignissim viverra.  <br><br> 
+Project 2: Todo List App - Created a full-stack todo list application using React, Node.js, Express.js, and MongoDB.<br>
+  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam efficitur scelerisque sapien sit amet molestie. Phasellus vulputate nibh quis dignissim viverra. Nullam pellentesque tortor a lorem auctor interdum. Quisque tempor, est eu hendrerit vehicula, felis magna
+  consequat arcu, nec tincidunt nunc nunc nec nunc.  <br><br>
+Project 3: Data Visualization Dashboard - Designed and implemented a data visualization dashboard using D3.js and React. <br>
+  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam efficitur scelerisque sapien sit amet molestie. Phasellus vulputate nibh quis dignissim viverra.
+ </textarea
               >
             </div>
             <div class="mb-3">
@@ -205,7 +217,7 @@ Certification 1: Front-End Web Development with React, Coursera<br>Certification
           <div class="modal-body">
             <div class="mb-3">
               <label for="allowedViewersInput" class="form-label"
-                >Allowed Viewers:</label
+                >Allowed Roasters:</label
               >
               <input
                 type="text"
@@ -219,7 +231,7 @@ Certification 1: Front-End Web Development with React, Coursera<br>Certification
           <div class="modal-body">
             <div class="mb-3">
               <label for="comments" class="form-label"
-                >Message to Viewers</label
+                >Message to Roasters:</label
               >
               <input
                 type="text"
@@ -241,7 +253,7 @@ Certification 1: Front-End Web Development with React, Coursera<br>Certification
             <button
               type="button"
               class="btn btn-primary"
-              id="generateResumeButton"
+              id="subGenerateButton"
               data-bs-dismiss="modal"
             >
               Generate Resume
@@ -259,7 +271,7 @@ Certification 1: Front-End Web Development with React, Coursera<br>Certification
       Generate Resume
     </button>
     <!-- My Resumes button -->
-    <button type="button" class="btn btn-primary" id="addCommentButton">
+    <button type="button" class="btn btn-primary" id="viewCommentsButton">
       View Comments
     </button>
 
@@ -295,12 +307,13 @@ Certification 1: Front-End Web Development with React, Coursera<br>Certification
         Close
       </button>
     </div>
-    <!-- For comments -->
+
+    <!-- For comments section  -->
     <div id="commentDisplayArea" style="display: none">
       <div id="commentLog"></div>
     </div>
 
-    <!-- For edit Sections -->
+    <!-- For edit section -->
     <div id="editModal" class="modal">
       <div class="modal-content">
         <span class="close" onclick="closeEditDisplay()">&times;</span>
@@ -309,6 +322,8 @@ Certification 1: Front-End Web Development with React, Coursera<br>Certification
         <button id="saveButton">Save</button>
       </div>
     </div>
+
+    <!-- For adding roaster section -->
     <div id="addRoasterModal" class="modal">
       <div class="modal-content">
         <span class="close">&times;</span>

@@ -1,3 +1,7 @@
+/**
+ * ============================= CLASS DEFS ================================
+ * =========================================================================
+ */
 class InputLog {
   constructor() {
     this.queryInputLog = [];
@@ -78,8 +82,6 @@ class StoredLog {
   }
 }
 
-const dbTemp = new StoredLog();
-
 class Resume {
   constructor(owner, sections) {
     this.resumeName;
@@ -106,7 +108,8 @@ class Section {
 
   generateHTML() {
     return this.header
-      ? `<h4>${this.header}</h4><p>${this.content}</p>`
+      ? // <h4>${this.header}</h4> <hr> <p>${this.content}</p>
+        `<h4>${this.header}</h4> <p>${this.content}</p>`
       : `<div>${this.content}</div>`;
   }
 }
@@ -120,11 +123,18 @@ class Comment {
   }
 }
 
+/**
+ * =========================== INITIAL SETUP ===============================
+ * =========================================================================
+ */
+
+const dbTemp = new StoredLog();
+
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("nextButton").addEventListener("click", () => {
     const inputLog = new InputLog();
     inputLog.updateQueryInputLog();
-    const newUser = new User(inputLog.queryInputLog[0].nameInput); // Define newUser here
+    const newUser = new User(inputLog.queryInputLog[0].nameInput);
     const newResume = new Resume(newUser, inputLog.generateSections());
     dbTemp.updateLog(newUser, newResume);
     console.log("New user and resume created:", newUser, newResume);
@@ -134,55 +144,60 @@ document.addEventListener("DOMContentLoaded", () => {
    * =========================== RESUME DISPLAY ==============================
    * =========================================================================
    */
-  document
-    .getElementById("generateResumeButton")
-    .addEventListener("click", () => {
-      if (dbTemp.resumes.length > 0) {
-        const latestResume = dbTemp.resumes[dbTemp.resumes.length - 1];
-        const currentUser = new User(latestResume.owner.name);
-        dbTemp.Users.push(currentUser);
-        dbTemp.resumeIds.push(latestResume.resumeId);
-        dbTemp.resumes.push(latestResume);
 
-        // Get the allowed viewers from the input field and add them to the resume
-        const allowedViewersInput = document.getElementById(
-          "allowedViewersInput"
-        ).value;
-        const allowedViewers = allowedViewersInput
-          .split(",")
-          .map((viewer) => viewer.trim());
-        latestResume.allowedViewers.push(...allowedViewers);
-
-        generateResumePreview(latestResume.sections, latestResume.comments);
-        document.getElementById("resumeDisplayArea").style.display = "block";
-        console.log("Generated resume:", latestResume);
-      } else {
-        // if no resume saved, then pop up saying save resume
-        // first when trying to generate a resume
-        alert("Need to save a resume first!");
-        document.getElementById("resumeContent").textContent =
-          "No resumes found.";
-        document.getElementById("resumeDisplayArea").style.display = "none";
-      }
-    });
-
-  // view comments message
-  document.getElementById("addCommentButton").addEventListener("click", () => {
+  // sub --> generate --> allowed viewers pg
+  document.getElementById("subGenerateButton").addEventListener("click", () => {
     if (dbTemp.resumes.length > 0) {
-      const firstResume = dbTemp.resumes[0];
-      const commentText =
-        document.getElementById("comments").value ||
-        "Please let me know how I can make my resume better";
-      const newComment = new Comment(
-        new User(firstResume.owner.name),
-        commentText
-      );
-      firstResume.comments.push(newComment);
-      generateResumePreview(firstResume.sections, firstResume.comments);
-      console.log("Added comment to resume:", newComment);
+      const latestResume = dbTemp.resumes[dbTemp.resumes.length - 1];
+      const currentUser = new User(latestResume.owner.name);
+      dbTemp.Users.push(currentUser);
+      dbTemp.resumeIds.push(latestResume.resumeId);
+      dbTemp.resumes.push(latestResume);
+
+      // Get the allowed viewers from the input field and add them to the resume
+      const allowedViewersInput = document.getElementById(
+        "allowedViewersInput"
+      ).value;
+      const allowedViewers = allowedViewersInput
+        .split(",")
+        .map((viewer) => viewer.trim());
+      latestResume.allowedViewers.push(...allowedViewers);
+
+      generateResumePreview(latestResume.sections, latestResume.comments);
+      document.getElementById("resumeDisplayArea").style.display = "block";
+      console.log("Generated resume:", latestResume);
+    } else {
+      // if no resume saved, then pop up saying save resume
+      // first when trying to generate a resume
+      alert("Need to save a resume first!");
+      document.getElementById("resumeContent").textContent =
+        "No resumes found.";
+      document.getElementById("resumeDisplayArea").style.display = "none";
     }
   });
 
+  // MAIN view comments message
+  document
+    .getElementById("viewCommentsButton")
+    .addEventListener("click", () => {
+      if (dbTemp.resumes.length > 0) {
+        const firstResume = dbTemp.resumes[0];
+        const commentText =
+          document.getElementById("comments").value ||
+          "Please let me know how I can make my resume better";
+        const newComment = new Comment(
+          new User(firstResume.owner.name),
+          commentText
+        );
+        firstResume.comments.push(newComment);
+        generateResumePreview(firstResume.sections, firstResume.comments);
+        console.log("Added comment to resume:", newComment);
+      } else {
+        alert("Need to save a resume first!");
+      }
+    });
+
+  // sub --> Resume --> within resume display
   document
     .getElementById("addCommentToResumeButton")
     .addEventListener("click", () => {
@@ -218,6 +233,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+ /**
+   * =========================== EDIT SECTION  ===============================
+   * =========================================================================
+   */
+// generate --> resume display --> edit
 let currentEditingResumeId = null;
 
 function openEditModal(resumeSections, resumeId) {
@@ -246,13 +266,13 @@ function extractTextContent(htmlString) {
 }
 
 function attachModalEventHandlers() {
-  const closeButton = document.querySelector(".close");
-  const modal = document.getElementById("editModal");
-  window.onclick = (event) => {
-    if (event.target === modal || event.target === closeButton) {
-      modal.style.display = "none";
-    }
-  };
+  // const closeButton = document.querySelector(".close");
+  // const modal = document.getElementById("editModal");
+  // window.onclick = (event) => {
+  //   if (event.target === modal || event.target === closeButton) {
+  //     modal.style.display = "none";
+  //   }
+  // };
   const saveButton = document.getElementById("saveButton");
   if (saveButton) {
     saveButton.removeEventListener("click", saveModalChanges);
@@ -260,6 +280,7 @@ function attachModalEventHandlers() {
   }
 }
 
+// SAVE CHANGES ==============================================================
 function saveModalChanges() {
   const editingResume = dbTemp.resumes.find(
     (resume) => resume.resumeId === currentEditingResumeId
@@ -282,15 +303,7 @@ function saveModalChanges() {
   currentEditingResumeId = null;
 }
 
-// document
-// .querySelector("#editModal .close")
-// .addEventListener("click", function () {
-//   document.getElementById("editModal").style.display = "none";
-// });
-function closeEditDisplay() {
-  document.getElementById("editModal").style.display = "none";
-}
-
+// main --> generate resume preview
 function generateResumePreview(resumeSections, resumeComments) {
   const previewArea = document.getElementById("resumeContent");
   const commentArea = document.getElementById("commentDisplayArea");
@@ -306,23 +319,32 @@ function generateResumePreview(resumeSections, resumeComments) {
           `<p><strong>${comment.User.getName()}:</strong> ${comment.text}</p>`
       )
       .join("");
-    commentArea.innerHTML = `<div class="section"><h4>Comments:</h4>${commentsHTML}</div>`;
+    commentArea.innerHTML = `<div class="section"><h4>Comments:</h4>${commentsHTML}</div> <span class="close" onclick="closeCommentDisplay()">&times;</span>
+    `;
     commentArea.style.display = "block";
   } else {
     commentArea.style.display = "none";
   }
 }
 
-// Event listener for closing the resume display modal
-// document
-//   .querySelector("#resumeDisplayArea .close")
-//   .addEventListener("click", function () {
-//     document.getElementById("resumeDisplayArea").style.display = "none";
-//   });
+// CLOSING  ==========================================================
 function closeResumeDisplay() {
   document.getElementById("resumeDisplayArea").style.display = "none";
 }
 
+function closeEditDisplay() {
+  document.getElementById("editModal").style.display = "none";
+}
+
+function closeCommentDisplay() {
+  document.getElementById("commentDisplayArea").style.display = "none";
+}
+
+
+ /**
+   * =========================== PDF GENERATING ==============================
+   * =========================================================================
+   */
 function downloadPDF() {
   const jsPDF = window.jspdf.jsPDF;
   const resumeDisplayArea = document.getElementById("resumeDisplayArea");
@@ -358,6 +380,11 @@ function downloadPDF() {
     });
 }
 
+ /**
+   * ============================= ADD ROASTER ===============================
+   * =========================================================================
+   */
+// generate --> resume display --> add roaster 
 // Event listener for opening the Add Roaster modal
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("addRoasterButton").addEventListener("click", () => {
@@ -391,6 +418,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("addRoasterModal").style.display = "none";
     });
 });
+
 // function saveResume(resume) {
 //     return db.collection("resumes").doc(resume.resumeId.toString()).set(resume)
 //         .then(() => console.log("Resume saved successfully!"))

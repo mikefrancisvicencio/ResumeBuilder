@@ -16,10 +16,16 @@ body {
   width: auto;
   height: auto;
   padding: 40px;
+  margin-bottom: 220px;
+}
+
+
+#resumeContent{
+  margin-bottom: 20px;
 }
 
 #commentDisplayArea {
-  background-color: #aafda9;
+  /* background-color: #aafda9;
   border-radius: 5px;
   padding: 20px;
   margin-left: 20px;
@@ -27,7 +33,27 @@ body {
   width: 300px;
   height: 1056px;
   box-sizing: border-box;
+  overflow-y: auto; } */
+  background-color: #e8d0b5;
+  border-radius: 5px;
+  padding: 20px;
+  margin: 20px;
+  margin-top: 0px;
+  width: 95%;
+  box-sizing: border-box;
   overflow-y: auto;
+  position: fixed;
+  bottom: 0;
+  height: auto; /* Adjust the height as needed, or keep it auto */
+  max-height: 200px; /* Maximum height, after which scroll will appear */
+  /* z-index: 1000; Ensure it stays on top of other elements */
+}
+#commentDisplayArea .close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  cursor: pointer;
 }
 
 .nameInput {
@@ -58,15 +84,29 @@ body {
 .projects,
 .certifications {
   font-size: 14px;
+  margin-bottom: 20px;
 }
+
+h4 {
+  font-size: 20px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+p{
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+/* hr{
+  margin-top: 10px;
+  margin-bottom: 5px;
+} */
 
 label {
   display: block;
-  margin-top: 10px;
+  font-size: 20px;
 }
-/* label .nameInput {
-  font-size: 15px;
-} */
 
 /* addding primary button styling */
 .btn-primary {
@@ -107,7 +147,7 @@ label {
 }
 
 /* close (X) button styling */
- .close {
+.close {
   position: absolute;
   top: 0;
   right: 0;
@@ -122,7 +162,7 @@ label {
 }
 
 /* edit save button styling */
-.modal-content #saveButton{
+.modal-content #saveButton {
   color: white;
   padding: 5px;
   font-size: 15px;
@@ -138,7 +178,7 @@ label {
 }
 
 /* add roaster styling */
-#addRoasterModal{
+#addRoasterModal {
   width: 80%;
   height: auto;
   border-radius: 7px;
@@ -148,4 +188,14 @@ label {
   background-color: rgb(163, 147, 112);
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+ul {
+  list-style-position: outside; /* Ensures bullets are outside the content flow */
+  margin-left: 0; /* Removes default margin */
+  padding-left: 20px; /* Adjust as necessary for proper bullet indentation */
+}
+
+li {
+  margin-bottom: 10px; /* Adjust as necessary for space between list items */
 }
