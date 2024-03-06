@@ -1,345 +1,381 @@
-// import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-// import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
-// import { getFirestore } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
-
-// const firebaseConfig = {
-//     apiKey: "YOUR_API_KEY",
-//     authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-//     projectId: "YOUR_PROJECT_ID",
-//     storageBucket: "YOUR_PROJECT_ID.appspot.com",
-//     messagingSenderId: "YOUR_SENDER_ID",
-//     appId: "YOUR_APP_ID",
-//     measurementId: "G-TDB92LPEPN"
-// };
-
-// const app = initializeApp(firebaseConfig);
-// const db = getFirestore(app);
-// const auth = getAuth(app);
-// // Register a new user
-// function registerUser(email, password) {
-//     createUserWithEmailAndPassword(auth, email, password)
-//         .then((userCredential) => {
-//             // Signed in 
-//             const user = userCredential.user;
-//             console.log("User registered:", user);
-//         })
-//         .catch((error) => {
-//             const errorCode = error.code;
-//             const errorMessage = error.message;
-//             console.error("Error registering user:", errorCode, errorMessage);
-//         });
-// }
-
-// Add event listener for the register button
-// document.getElementById('registerButton').addEventListener('click', () => {
-//     const email = document.getElementById('registerEmail').value;
-//     const password = document.getElementById('registerPassword').value;
-//     registerUser(email, password);
-// });
 class InputLog {
-    constructor() {
-        this.queryInputLog = [];
-        console.log("InputLog created:", this);
-    }
+  constructor() {
+    this.queryInputLog = [];
+    console.log("InputLog created:", this);
+  }
 
-    updateQueryInputLog() {
-        const fields = ['nameInput', 'phone', 'linkedin', 'github', 'email', 'summaryStatement', 'education', 'skills', 'projects', 'experience', 'certifications'];
-        const inputData = {};
-        fields.forEach(field => inputData[field] = document.getElementById(field).value);
-        this.queryInputLog.push(inputData);
-        console.log("InputLog updated:", this.queryInputLog);
-    }
+  updateQueryInputLog() {
+    const fields = [
+      "nameInput",
+      "phone",
+      "linkedin",
+      "github",
+      "email",
+      "summaryStatement",
+      "education",
+      "skills",
+      "projects",
+      "experience",
+      "certifications",
+    ];
+    const inputData = {};
+    fields.forEach(
+      (field) => (inputData[field] = document.getElementById(field).value)
+    );
+    this.queryInputLog.push(inputData);
+    console.log("InputLog updated:", this.queryInputLog);
+  }
 
-    generateSections() {
-        const inputData = this.queryInputLog[0];
-        return Object.keys(inputData).map((key, index) => {
-            const header = index < 5 ? "" : this.formatHeader(key);
-            return new Section(header, `<div class="${key}">${inputData[key]}</div>`);
-        });
-    }
+  generateSections() {
+    const inputData = this.queryInputLog[0];
+    return Object.keys(inputData).map((key, index) => {
+      const header = index < 5 ? "" : this.formatHeader(key);
+      return new Section(header, `<div class="${key}">${inputData[key]}</div>`);
+    });
+  }
 
-    formatHeader(key) {
-        return key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
-    }
+  formatHeader(key) {
+    return key
+      .replace(/([A-Z])/g, " $1")
+      .replace(/^./, (str) => str.toUpperCase());
+  }
 }
 
 class User {
-    constructor(name) {
-        this.isNewUser = true;
-        this.resumes = [];
-        this.name = name;
-        this.isViewer = false;
-        console.log("User created:", this);
-    }
+  constructor(name) {
+    this.isNewUser = true;
+    this.resumes = [];
+    this.name = name;
+    this.isViewer = false;
+    console.log("User created:", this);
+  }
 
-    changeName(newName) {
-        this.name = newName;
-        console.log("User name changed:", this.name);
-    }
+  changeName(newName) {
+    this.name = newName;
+    console.log("User name changed:", this.name);
+  }
 
-    getName() {
-        return this.name;
-    }
+  getName() {
+    return this.name;
+  }
 }
 
 class StoredLog {
-    constructor() {
-        this.Users = [];
-        this.resumeIds = [];
-        this.resumes = [];
-        console.log("StoredLog created:", this);
-    }
+  constructor() {
+    this.Users = [];
+    this.resumeIds = [];
+    this.resumes = [];
+    console.log("StoredLog created:", this);
+  }
 
-    updateLog(user, resume) {
-        if (!this.Users.some(u => u.name === user.name)) {
-            this.Users.push(user);
-        }
-        this.resumes.push(resume);
-        this.resumeIds.push(resume.resumeId);
-        console.log("StoredLog updated:", this);
+  updateLog(user, resume) {
+    if (!this.Users.some((u) => u.name === user.name)) {
+      this.Users.push(user);
     }
+    this.resumes.push(resume);
+    this.resumeIds.push(resume.resumeId);
+    console.log("StoredLog updated:", this);
+  }
 }
 
 const dbTemp = new StoredLog();
 
 class Resume {
-    constructor(owner, sections) {
-        this.resumeName;
-        this.resumeId = this.resumeIDGenerator();
-        this.pdf = null;
-        this.comments = [];
-        this.allowedViewers = [];
-        this.sections = sections;
-        this.owner = owner;
-        console.log("Resume created:", this);
-    }
+  constructor(owner, sections) {
+    this.resumeName;
+    this.resumeId = this.resumeIDGenerator();
+    this.pdf = null;
+    this.comments = [];
+    this.allowedViewers = [];
+    this.sections = sections;
+    this.owner = owner;
+    console.log("Resume created:", this);
+  }
 
-    resumeIDGenerator() {
-        return Math.floor(10000 + Math.random() * 90000);
-    }
+  resumeIDGenerator() {
+    return Math.floor(10000 + Math.random() * 90000);
+  }
 }
 
 class Section {
-    constructor(header, content) {
-        this.header = header;
-        this.content = content;
-        console.log("Section created:", this);
-    }
+  constructor(header, content) {
+    this.header = header;
+    this.content = content;
+    console.log("Section created:", this);
+  }
 
-    generateHTML() {
-        return this.header ? `<h4>${this.header}</h4><p>${this.content}</p>` : `<div>${this.content}</div>`;
-    }
+  generateHTML() {
+    return this.header
+      ? `<h4>${this.header}</h4><p>${this.content}</p>`
+      : `<div>${this.content}</div>`;
+  }
 }
 
 class Comment {
-    constructor(user, text) {
-        this.User = user;
-        this.text = text;
-        this.textColor = 'black';
-        console.log("Comment created:", this);
-    }
+  constructor(user, text) {
+    this.User = user;
+    this.text = text;
+    this.textColor = "black";
+    console.log("Comment created:", this);
+  }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('nextButton').addEventListener('click', () => {
-        const inputLog = new InputLog();
-        inputLog.updateQueryInputLog();
-        const newUser = new User(inputLog.queryInputLog[0].nameInput); // Define newUser here
-        const newResume = new Resume(newUser, inputLog.generateSections());
-        dbTemp.updateLog(newUser, newResume);
-        console.log("New user and resume created:", newUser, newResume);
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("nextButton").addEventListener("click", () => {
+    const inputLog = new InputLog();
+    inputLog.updateQueryInputLog();
+    const newUser = new User(inputLog.queryInputLog[0].nameInput); // Define newUser here
+    const newResume = new Resume(newUser, inputLog.generateSections());
+    dbTemp.updateLog(newUser, newResume);
+    console.log("New user and resume created:", newUser, newResume);
+  });
+
+  document
+    .getElementById("generateResumeButton")
+    .addEventListener("click", () => {
+      if (dbTemp.resumes.length > 0) {
+        const latestResume = dbTemp.resumes[dbTemp.resumes.length - 1];
+        const currentUser = new User(latestResume.owner.name);
+        dbTemp.Users.push(currentUser);
+        dbTemp.resumeIds.push(latestResume.resumeId);
+        dbTemp.resumes.push(latestResume);
+
+        // Get the allowed viewers from the input field and add them to the resume
+        const allowedViewersInput = document.getElementById(
+          "allowedViewersInput"
+        ).value;
+        const allowedViewers = allowedViewersInput
+          .split(",")
+          .map((viewer) => viewer.trim());
+        latestResume.allowedViewers.push(...allowedViewers);
+
+        generateResumePreview(latestResume.sections, latestResume.comments);
+        document.getElementById("resumeDisplayArea").style.display = "block";
+        console.log("Generated resume:", latestResume);
+      } else {
+        document.getElementById("resumeContent").textContent =
+          "No resumes found.";
+        document.getElementById("resumeDisplayArea").style.display = "none";
+      }
     });
 
-    document.getElementById('generateResumeButton').addEventListener('click', () => {
-        if (dbTemp.resumes.length > 0) {
-            const latestResume = dbTemp.resumes[dbTemp.resumes.length - 1];
-            const currentUser = new User(latestResume.owner.name);
-            dbTemp.Users.push(currentUser);
-            dbTemp.resumeIds.push(latestResume.resumeId);
-            dbTemp.resumes.push(latestResume);
-    
-            // Get the allowed viewers from the input field and add them to the resume
-            const allowedViewersInput = document.getElementById('allowedViewersInput').value;
-            const allowedViewers = allowedViewersInput.split(',').map(viewer => viewer.trim());
-            latestResume.allowedViewers.push(...allowedViewers);
-    
-            generateResumePreview(latestResume.sections, latestResume.comments);
-            document.getElementById('resumeDisplayArea').style.display = 'block';
-            console.log("Generated resume:", latestResume);
-        } else {
-            document.getElementById('resumeContent').textContent = 'No resumes found.';
-            document.getElementById('resumeDisplayArea').style.display = 'none';
-        }
-    });
-
-    document.getElementById('addCommentButton').addEventListener('click', () => {
-        if (dbTemp.resumes.length > 0) {
-            const firstResume = dbTemp.resumes[0];
-            const commentText = document.getElementById('comments').value || "Please let me know how I can make my resume better";
-            const newComment = new Comment(new User(firstResume.owner.name), commentText);
-            firstResume.comments.push(newComment);
-            generateResumePreview(firstResume.sections, firstResume.comments);
-            console.log("Added comment to resume:", newComment);
-        }
-    });
-
-    document.getElementById('addCommentToResumeButton').addEventListener('click', () => {
-        if (dbTemp.resumes.length > 0) {
-            const firstResume = dbTemp.resumes[0];
-            const commentText = prompt("Enter your comment:");
-            if (commentText) {
-                const newComment = new Comment(new User(firstResume.owner.name), commentText);
-                firstResume.comments.push(newComment);
-                generateResumePreview(firstResume.sections, firstResume.comments);
-                console.log("Added comment to resume:", newComment);
-            }
-        }
-    });
-
-    document.getElementById('editSectionsButton').addEventListener('click', () => {
-        if (dbTemp.resumes.length > 0) {
-            const firstResume = dbTemp.resumes[0];
-            openEditModal(firstResume.sections, firstResume.resumeId);
-        }
-    });
-
-    const downloadButton = document.getElementById('downloadPdfButton');
-    if (downloadButton) {
-        downloadButton.addEventListener('click', downloadPDF);
-    } else {
-        console.error("Download PDF button not found.");
+  document.getElementById("addCommentButton").addEventListener("click", () => {
+    if (dbTemp.resumes.length > 0) {
+      const firstResume = dbTemp.resumes[0];
+      const commentText =
+        document.getElementById("comments").value ||
+        "Please let me know how I can make my resume better";
+      const newComment = new Comment(
+        new User(firstResume.owner.name),
+        commentText
+      );
+      firstResume.comments.push(newComment);
+      generateResumePreview(firstResume.sections, firstResume.comments);
+      console.log("Added comment to resume:", newComment);
     }
+  });
+
+  document
+    .getElementById("addCommentToResumeButton")
+    .addEventListener("click", () => {
+      if (dbTemp.resumes.length > 0) {
+        const firstResume = dbTemp.resumes[0];
+        const commentText = prompt("Enter your comment:");
+        if (commentText) {
+          const newComment = new Comment(
+            new User(firstResume.owner.name),
+            commentText
+          );
+          firstResume.comments.push(newComment);
+          generateResumePreview(firstResume.sections, firstResume.comments);
+          console.log("Added comment to resume:", newComment);
+        }
+      }
+    });
+
+  document
+    .getElementById("editSectionsButton")
+    .addEventListener("click", () => {
+      if (dbTemp.resumes.length > 0) {
+        const firstResume = dbTemp.resumes[0];
+        openEditModal(firstResume.sections, firstResume.resumeId);
+      }
+    });
+
+  const downloadButton = document.getElementById("downloadPdfButton");
+  if (downloadButton) {
+    downloadButton.addEventListener("click", downloadPDF);
+  } else {
+    console.error("Download PDF button not found.");
+  }
 });
 
 let currentEditingResumeId = null;
 
 function openEditModal(resumeSections, resumeId) {
-    currentEditingResumeId = resumeId;
-    const modal = document.getElementById('editModal');
-    const modalContent = document.getElementById('modalContent');
-    modalContent.innerHTML = '';
-    resumeSections.forEach((section, index) => {
-        const editableContent = extractTextContent(section.content);
-        const sectionDiv = document.createElement('div');
-        sectionDiv.classList.add('modal-section');
-        sectionDiv.innerHTML = index < 5 ?
-            `<label>${section.header}</label><div class="non-editable-content">${editableContent}</div>` :
-            `<label>${section.header}</label><textarea id="edit-${section.header}" rows="4" cols="50">${editableContent}</textarea>`;
-        modalContent.appendChild(sectionDiv);
-    });
-    modal.style.display = 'block';
-    attachModalEventHandlers();
+  currentEditingResumeId = resumeId;
+  const modal = document.getElementById("editModal");
+  const modalContent = document.getElementById("modalContent");
+  modalContent.innerHTML = "";
+  resumeSections.forEach((section, index) => {
+    const editableContent = extractTextContent(section.content);
+    const sectionDiv = document.createElement("div");
+    sectionDiv.classList.add("modal-section");
+    sectionDiv.innerHTML =
+      index < 5
+        ? `<div class="non-editable-content">${editableContent}</div>`
+        : `<label>${section.header}</label><textarea id="edit-${section.header}" rows="4" cols="50">${editableContent}</textarea>`;
+    modalContent.appendChild(sectionDiv);
+  });
+  modal.style.display = "block";
+  attachModalEventHandlers();
 }
 
 function extractTextContent(htmlString) {
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = htmlString;
-    return tempDiv.textContent || tempDiv.innerText || "";
+  const tempDiv = document.createElement("div");
+  tempDiv.innerHTML = htmlString;
+  return tempDiv.textContent || tempDiv.innerText || "";
 }
 
 function attachModalEventHandlers() {
-    const closeButton = document.querySelector('.close');
-    const modal = document.getElementById('editModal');
-    window.onclick = (event) => {
-        if (event.target === modal || event.target === closeButton) {
-            modal.style.display = 'none';
-        }
-    };
-    const saveButton = document.getElementById('saveButton');
-    if (saveButton) {
-        saveButton.removeEventListener('click', saveModalChanges);
-        saveButton.addEventListener('click', saveModalChanges);
+  const closeButton = document.querySelector(".close");
+  const modal = document.getElementById("editModal");
+  window.onclick = (event) => {
+    if (event.target === modal || event.target === closeButton) {
+      modal.style.display = "none";
     }
+  };
+  const saveButton = document.getElementById("saveButton");
+  if (saveButton) {
+    saveButton.removeEventListener("click", saveModalChanges);
+    saveButton.addEventListener("click", saveModalChanges);
+  }
 }
 
 function saveModalChanges() {
-    const editingResume = dbTemp.resumes.find(resume => resume.resumeId === currentEditingResumeId);
-    if (editingResume) {
-        editingResume.sections.forEach((section, index) => {
-            if (index >= 5) {
-                const editedContentElement = document.getElementById(`edit-${section.header}`);
-                if (editedContentElement) {
-                    const className = section.content.match(/class="([^"]+)"/)[1];
-                    section.content = `<div class="${className}">${editedContentElement.value}</div>`;
-                }
-            }
-        });
-        generateResumePreview(editingResume.sections, editingResume.comments);
-    }
-    document.getElementById('editModal').style.display = 'none';
-    currentEditingResumeId = null;
+  const editingResume = dbTemp.resumes.find(
+    (resume) => resume.resumeId === currentEditingResumeId
+  );
+  if (editingResume) {
+    editingResume.sections.forEach((section, index) => {
+      if (index >= 5) {
+        const editedContentElement = document.getElementById(
+          `edit-${section.header}`
+        );
+        if (editedContentElement) {
+          const className = section.content.match(/class="([^"]+)"/)[1];
+          section.content = `<div class="${className}">${editedContentElement.value}</div>`;
+        }
+      }
+    });
+    generateResumePreview(editingResume.sections, editingResume.comments);
+  }
+  document.getElementById("editModal").style.display = "none";
+  currentEditingResumeId = null;
 }
 
 function generateResumePreview(resumeSections, resumeComments) {
-    const previewArea = document.getElementById('resumeContent');
-    const commentArea = document.getElementById('commentDisplayArea');
-    previewArea.innerHTML = '';
-    commentArea.innerHTML = '';
-    resumeSections.forEach(section => {
-        previewArea.innerHTML += section.generateHTML();
-    });
-    if (resumeComments.length > 0) {
-        const commentsHTML = resumeComments.map(comment => `<p><strong>${comment.User.getName()}:</strong> ${comment.text}</p>`).join('');
-        commentArea.innerHTML = `<div class="section"><h4>Comments:</h4>${commentsHTML}</div>`;
-        commentArea.style.display = 'block';
-    } else {
-        commentArea.style.display = 'none';
-    }
+  const previewArea = document.getElementById("resumeContent");
+  const commentArea = document.getElementById("commentDisplayArea");
+  previewArea.innerHTML = "";
+  commentArea.innerHTML = "";
+  resumeSections.forEach((section) => {
+    previewArea.innerHTML += section.generateHTML();
+  });
+  if (resumeComments.length > 0) {
+    const commentsHTML = resumeComments
+      .map(
+        (comment) =>
+          `<p><strong>${comment.User.getName()}:</strong> ${comment.text}</p>`
+      )
+      .join("");
+    commentArea.innerHTML = `<div class="section"><h4>Comments:</h4>${commentsHTML}</div>`;
+    commentArea.style.display = "block";
+  } else {
+    commentArea.style.display = "none";
+  }
 }
+// const previewArea = document.getElementById('resumeContent');
+// const commentArea = document.getElementById('commentDisplayArea');
+// previewArea.innerHTML = '';
+// commentArea.innerHTML = '';
+// resumeSections.forEach(section => {
+//     previewArea.innerHTML += section.generateHTML();
+// });
+// if (resumeComments.length > 0) {
+//     const commentsHTML = resumeComments.map(comment => `<p><strong>${comment.User.getName()}:</strong> ${comment.text}</p>`).join('');
+//     commentArea.innerHTML = `<div class="section"><h4>Comments:</h4>${commentsHTML}</div>`;
+//     commentArea.style.display = 'block';
+// } else {
+//     commentArea.style.display = 'none';
+// }
 
 function downloadPDF() {
-    const jsPDF = window.jspdf.jsPDF;
-    const resumeDisplayArea = document.getElementById('resumeDisplayArea');
-    resumeDisplayArea.style.display = 'block';
-    html2canvas(resumeDisplayArea, {
-        onclone: (clonedDoc) => {
-            clonedDoc.querySelectorAll('#downloadPdfButton, #addCommentToResumeButton, #addRoasterButton, #editSectionsButton')
-                .forEach(elem => elem.style.display = 'none');
-        },
-        scale: window.devicePixelRatio,
-        windowWidth: resumeDisplayArea.scrollWidth,
-        windowHeight: resumeDisplayArea.scrollHeight,
-    }).then((canvas) => {
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF({
-            orientation: 'portrait',
-            unit: 'px',
-            format: [canvas.width, canvas.height]
-        });
-        pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
-        pdf.save('resume.pdf');
-        resumeDisplayArea.style.display = 'none';
-    }).catch((error) => {
-        console.error('Error generating PDF: ', error);
+  const jsPDF = window.jspdf.jsPDF;
+  const resumeDisplayArea = document.getElementById("resumeDisplayArea");
+  resumeDisplayArea.style.display = "block";
+  html2canvas(resumeDisplayArea, {
+    onclone: (clonedDoc) => {
+      clonedDoc
+        .querySelectorAll(
+          "#downloadPdfButton, #addCommentToResumeButton, #addRoasterButton, #editSectionsButton"
+        )
+        .forEach((elem) => (elem.style.display = "none"));
+    },
+    scale: window.devicePixelRatio,
+    windowWidth: resumeDisplayArea.scrollWidth,
+    windowHeight: resumeDisplayArea.scrollHeight,
+  })
+    .then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "in", 
+        format: "letter", 
+      });
+      // Calculate the scaling factor to fit the canvas image within 8.5 x 11 inches
+      const imgWidth = 8.5;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+      pdf.save("resume.pdf");
+      resumeDisplayArea.style.display = "none";
+    })
+    .catch((error) => {
+      console.error("Error generating PDF: ", error);
     });
 }
-document.addEventListener('DOMContentLoaded', () => {
-    // Event listener for opening the Add Roaster modal
-    document.getElementById('addRoasterButton').addEventListener('click', () => {
-        document.getElementById('addRoasterModal').style.display = 'block';
+
+// Event listener for opening the Add Roaster modal
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("addRoasterButton").addEventListener("click", () => {
+    document.getElementById("addRoasterModal").style.display = "block";
+  });
+
+  // Event listener for closing the Add Roaster modal
+  document
+    .querySelector("#addRoasterModal .close")
+    .addEventListener("click", function () {
+      document.getElementById("addRoasterModal").style.display = "none";
     });
 
-    // Event listener for closing the Add Roaster modal
-    document.querySelector('#addRoasterModal .close').addEventListener('click', function() {
-        document.getElementById('addRoasterModal').style.display = 'none';
-    });
-
-    // Event listener for saving the roaster
-    document.getElementById('saveRoasterButton').addEventListener('click', function() {
-        var roasterName = document.getElementById('roasterNameInput').value;
-        if (roasterName) {
-            // Assuming you want to add the roaster to the first resume
-            if (dbTemp.resumes.length > 0) {
-                const firstResume = dbTemp.resumes[0];
-                firstResume.allowedViewers.push(roasterName);
-                console.log(`Added roaster: ${roasterName}`);
-                // Update the resume preview to display the new roaster
-                generateResumePreview(firstResume.sections, firstResume.comments);
-            }
+  // Event listener for saving the roaster
+  document
+    .getElementById("saveRoasterButton")
+    .addEventListener("click", function () {
+      var roasterName = document.getElementById("roasterNameInput").value;
+      if (roasterName) {
+        // Assuming you want to add the roaster to the first resume
+        if (dbTemp.resumes.length > 0) {
+          const firstResume = dbTemp.resumes[0];
+          firstResume.allowedViewers.push(roasterName);
+          console.log(`Added roaster: ${roasterName}`);
+          // Update the resume preview to display the new roaster
+          generateResumePreview(firstResume.sections, firstResume.comments);
         }
-        // Clear the input field and close the modal
-        document.getElementById('roasterNameInput').value = '';
-        document.getElementById('addRoasterModal').style.display = 'none';
+      }
+      // Clear the input field and close the modal
+      document.getElementById("roasterNameInput").value = "";
+      document.getElementById("addRoasterModal").style.display = "none";
     });
 });
 // function saveResume(resume) {
@@ -365,7 +401,3 @@ document.addEventListener('DOMContentLoaded', () => {
 //             console.error("Error logging out user:", error);
 //         });
 // }
-
-
-
-

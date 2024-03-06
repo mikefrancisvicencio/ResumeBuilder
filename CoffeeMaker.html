@@ -1,181 +1,319 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script><!--for popup-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"><!--for popup-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script><!--library for generating PDF-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.3/purify.min.js"></script><!--sanitizes HTML and prevents XSS attacks. It seems like jsPDF expects it to be available when using the html method to generate PDFs from HTML content.-->
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!--for popup-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+    <!--for popup-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <!--library for generating PDF-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.3/purify.min.js"></script>
+    <!--sanitizes HTML and prevents XSS attacks. It seems like jsPDF expects it to be available when using the html method to generate PDFs from HTML content.-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
     <!-- <script type="module" src="power.js"></script>JavaScript file -->
-    <script src="power.js"></script><!--JavaScript file-->
-    <link rel="stylesheet" href="style.css">
-
-</head>
-<body>
-    <!-- <input type="email" id="registerEmail" placeholder="Email">
-<input type="password" id="registerPassword" placeholder="Password">
-<button id="registerButton">Register</button>
-<script>
-    document.getElementById('registerButton').addEventListener('click', () => {
-        const email = document.getElementById('registerEmail').value;
-        const password = document.getElementById('registerPassword').value;
-        registerUser(email, password);
-    });
-</script> -->
+    <script src="power.js"></script>
+    <!--JavaScript file-->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
     <!-- New User Modal -->
     <div class="modal" id="myModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <!-- Modal Header -->
-                <div class="modal-header">
-                    <h5 class="modal-title">Please Introduce Yourself</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <!-- Modal Body -->
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <!-- name input -->
-                        <label for="nameInput" class="form-label">Name:</label>
-                        <input type="text" class="form-control" id="nameInput" placeholder="First Last" value="John Doe">
-                    </div>
-                    <div class="form-check">
-                        <!-- checkbox for returning user -->
-                        <input class="form-check-input" type="checkbox" value="" id="returningUserCheck">
-                        <label class="form-check-label" for="returningUserCheck">I am a returning user</label>
-                    </div>
-                    <div class="mb-3">
-                        <!-- phone # input -->
-                        <label for="phoneInput" class="form-label">Phone Number:</label>
-                        <input type="tel" class="form-control" id="phone" placeholder="(###) ###-####" value="(123) 456 - 7899">
-                    </div>
-                    <div class="mb-3">
-                        <!-- LinkedIn input -->
-                        <label for="linkedInInput" class="form-label">LinkedIn:</label>
-                        <input type="text" class="form-control" id="linkedin" placeholder="linkedin.com/in/janedoe" value="linkedin.com/in/johndoe">
-                    </div>
-                    <div class="mb-3">
-                        <!-- Github input -->
-                        <label for="gitHubInput" class="form-label">Github:</label>
-                        <input type="text" class="form-control" id="github" placeholder="github.com/janedoe" value="github.com/johndoe">
-                    </div>
-                    <div class="mb-3">
-                        <!-- email input -->
-                        <label for="emailInput" class="form-label">Email Address:</label>
-                        <input type="email" class="form-control" id="email" placeholder="example@uw.edu" value="johndoe@uw.edu">
-                    </div>
-                    <div class="mb-3">
-                        <!-- summary input -->
-                        <label for="summaryInput" class="form-label">Summary Statement:</label>
-                        <textarea class="form-control" id="summaryStatement" rows="3" placeholder="(Your First Name) is a talented...">As a passionate programming student, I am adept at learning new technologies and applying them to solve problems. With a strong foundation in programming concepts and languages such as Python, Java, and C++, I am eager to contribute to innovative projects. I excel in collaborative environments and am committed to continuous learning and professional growth. Seeking opportunities to leverage my skills and enthusiasm to make meaningful contributions in the field of software development.</textarea>
-                    </div>
-                    <div class="mb-3">
-                        <!-- education input -->
-                        <label for="educationInput" class="form-label">Your Education:</label>
-                        <textarea class="form-control" id="education" rows="3" placeholder="University, Degree, Graduation Date, GPA, Relevant Courses">University of Washington Bothell, B.S. in Computer Science, Graduated June 2024, GPA: 3.8, Relevant Courses: Web Programming, Database Systems, Software Engineering, Data Structures and Algorithms</textarea>
-                    </div>
-                    <div class="mb-3">
-                        <!-- skills input -->
-                        <label for="skillsInput" class="form-label">Your Skills:</label>
-                        <textarea class="form-control" id="skills" rows="3" placeholder="List your skills here">Programming Languages: HTML, CSS, JavaScript, Python, Java\nFrameworks/Libraries: React, Node.js, Express.js, Bootstrap\nTools: Git, GitHub, Visual Studio Code, MongoDB, MySQL\nSoft Skills: Team collaboration, problem-solving, communication, time management</textarea>
-                    </div>
-                    <div class="mb-3">
-                        <!-- projects input -->
-                        <label for="projectsInput" class="form-label">Projects:</label>
-                        <textarea class="form-control" id="projects" rows="3" placeholder="List your projects and a brief description">Project 1: Portfolio Website - Developed a personal portfolio website using HTML, CSS, and JavaScript.\nProject 2: Todo List App - Created a full-stack todo list application using React, Node.js, Express.js, and MongoDB.</textarea>
-                    </div>
-                    <div class="mb-3">
-                        <!-- experience input -->
-                        <label for="experienceInput" class="form-label">Experience:</label>
-                        <textarea class="form-control" id="experience" rows="3" placeholder="List your experience and a brief description">Experience 1: Web Development Intern at XYZ Company - Assisted in developing and maintaining the company's website using HTML, CSS, and JavaScript.</textarea>
-                    </div>
-                    <div class="mb-3">
-                        <!-- certifications input -->
-                        <label for="certificationsInput" class="form-label">Certifications:</label>
-                        <textarea class="form-control" id="certifications" rows="3" placeholder="List your certifications">Certification 1: Front-End Web Development with React, Coursera\nCertification 2: JavaScript Algorithms and Data Structures, freeCodeCamp</textarea>
-                    </div>
-                </div>
-                <!-- Modal Footer -->
-                <div class="modal-footer">
-                    <!-- bottom buttons, close and next -->
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="nextButton" data-bs-dismiss="modal">Next</button>
-                </div>
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h5 class="modal-title">Please Introduce Yourself</h5>
+          </div>
+          <!-- Modal Body -->
+          <div class="modal-body">
+            <div class="mb-3">
+              <!-- name input -->
+              <label for="nameInput" class="form-label">Name:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="nameInput"
+                placeholder="First Last"
+                value="John Doe"
+              />
             </div>
+            <div class="mb-3">
+              <!-- phone # input -->
+              <label for="phoneInput" class="form-label">Phone Number:</label>
+              <input
+                type="tel"
+                class="form-control"
+                id="phone"
+                placeholder="(###) ###-####"
+                value="(123) 456 - 7899"
+              />
+            </div>
+            <div class="mb-3">
+              <!-- LinkedIn input -->
+              <label for="linkedInInput" class="form-label">LinkedIn:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="linkedin"
+                placeholder="linkedin.com/in/janedoe"
+                value="linkedin.com/in/johndoe"
+              />
+            </div>
+            <div class="mb-3">
+              <!-- Github input -->
+              <label for="gitHubInput" class="form-label">Github:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="github"
+                placeholder="github.com/janedoe"
+                value="github.com/johndoe"
+              />
+            </div>
+            <div class="mb-3">
+              <!-- email input -->
+              <label for="emailInput" class="form-label">Email Address:</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                placeholder="example@uw.edu"
+                value="johndoe@uw.edu"
+              />
+            </div>
+            <div class="mb-3">
+              <!-- summary input -->
+              <label for="summaryInput" class="form-label">Introduction:</label>
+              <textarea
+                class="form-control"
+                id="summaryStatement"
+                rows="3"
+                placeholder="(Your First Name) is a talented..."
+              >
+As a passionate programming student, I am adept at learning new technologies and applying them to solve problems. With a strong foundation in programming concepts and languages such as Python, Java, and C++, I am eager to contribute to innovative projects. I excel in collaborative environments and am committed to continuous learning and professional growth. Seeking opportunities to leverage my skills and enthusiasm to make meaningful contributions in the field of software development.</textarea
+              >
+            </div>
+            <div class="mb-3">
+              <!-- education input -->
+              <label for="educationInput" class="form-label">Education:</label>
+              <textarea
+                class="form-control"
+                id="education"
+                rows="3"
+                placeholder="University, Degree, Graduation Date, GPA, Relevant Courses"
+              >
+University of Washington Bothell, B.S. in Computer Science<br> Graduated June 2024, GPA: 3.8 <br> Relevant Courses: Web Programming, Database Systems, Software Engineering, Data Structures and Algorithms</textarea
+              >
+            </div>
+            <div class="mb-3">
+              <!-- skills input -->
+              <label for="skillsInput" class="form-label">Skills:</label>
+              <textarea
+                class="form-control"
+                id="skills"
+                rows="3"
+                placeholder="List your skills here"
+              >
+Programming Languages: HTML, CSS, JavaScript, Python, Java <br> Frameworks/Libraries: React, Node.js, Express.js, Bootstrap<br>Tools: Git, GitHub, Visual Studio Code, MongoDB, MySQL<br>Soft Skills: Team collaboration, problem-solving, communication, time management</textarea
+              >
+            </div>
+            <div class="mb-3">
+              <!-- projects input -->
+              <label for="projectsInput" class="form-label">Projects:</label>
+              <textarea
+                class="form-control"
+                id="projects"
+                rows="3"
+                placeholder="List your projects and a brief description"
+              >
+Project 1: Portfolio Website - Developed a personal portfolio website using HTML, CSS, and JavaScript. <br> Project 2: Todo List App - Created a full-stack todo list application using React, Node.js, Express.js, and MongoDB.</textarea
+              >
+            </div>
+            <div class="mb-3">
+              <!-- experience input -->
+              <label for="experienceInput" class="form-label"
+                >Experience:</label
+              >
+              <textarea
+                class="form-control"
+                id="experience"
+                rows="3"
+                placeholder="List your experience and a brief description"
+              >
+Experience 1: Web Development Intern at XYZ Company - Assisted in developing and maintaining the company's website using HTML, CSS, and JavaScript.</textarea
+              >
+            </div>
+            <div class="mb-3">
+              <!-- certifications input -->
+              <label for="certificationsInput" class="form-label"
+                >Certifications:</label
+              >
+              <textarea
+                class="form-control"
+                id="certifications"
+                rows="3"
+                placeholder="List your certifications"
+              >
+Certification 1: Front-End Web Development with React, Coursera<br>Certification 2: JavaScript Algorithms and Data Structures, freeCodeCamp</textarea
+              >
+            </div>
+          </div>
+          <!-- Modal Footer -->
+          <div class="modal-footer">
+            <!-- bottom buttons, close and next -->
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="nextButton"
+              data-bs-dismiss="modal"
+            >
+              Save
+            </button>
+          </div>
         </div>
+      </div>
     </div>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">New User</button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      data-bs-toggle="modal"
+      data-bs-target="#myModal"
+    >
+      Create Resume
+    </button>
 
     <!-- Generate Resume -->
     <!-- Modify to add a resume name -->
     <div class="modal" id="newUserModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <!-- Modal Header -->
-                <div class="modal-header">
-                    <h5 class="modal-title">Your Resume is Ready!</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <!-- Modal Body -->
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="allowedViewersInput" class="form-label">Allowed Viewers:</label>
-                        <input type="text" class="form-control" id="allowedViewersInput" placeholder="Email addresses separated by commas" value="Arthur Morgan">
-                    </div>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="comments" class="form-label">Message to Viewers</label>
-                        <input type="text" class="form-control" id="comments" placeholder="Please let me know how I can make my resume better">
-                    </div>
-                </div>
-                <!-- Modal Footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="generateResumeButton" data-bs-dismiss="modal">Generate Resume</button>
-                </div>
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h5 class="modal-title">Your Resume is Ready!</h5>
+          </div>
+          <!-- Modal Body -->
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="allowedViewersInput" class="form-label"
+                >Allowed Viewers:</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="allowedViewersInput"
+                placeholder="Email addresses separated by commas"
+                value="Arthur Morgan"
+              />
             </div>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="comments" class="form-label"
+                >Message to Viewers</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="comments"
+                placeholder="Please let me know how I can make my resume better"
+              />
+            </div>
+          </div>
+          <!-- Modal Footer -->
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="generateResumeButton"
+              data-bs-dismiss="modal"
+            >
+              Generate Resume
+            </button>
+          </div>
         </div>
+      </div>
     </div>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newUserModal">Generate Resume</button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      data-bs-toggle="modal"
+      data-bs-target="#newUserModal"
+    >
+      Generate Resume
+    </button>
     <!-- My Resumes button -->
-   
-    <button type="button" class="btn btn-primary" id="addCommentButton">My Resumes</button>
-    
+    <button type="button" class="btn btn-primary" id="addCommentButton">
+      My Resumes
+    </button>
+
     <!-- Display Area for Generated Resume -->
-    <div id="resumeDisplayArea" style="display: none;">
-        <div id="resumeContent"></div>
-        <button type="button" class="btn btn-primary" id="downloadPdfButton">Download PDF</button>
-        <!-- Add Comment button -->
-        <button type="button" class="btn btn-primary" id="addCommentToResumeButton">Add Comment</button>
-        <!-- Add Viewer button -->
-        <button type="button" class="btn btn-primary" id="addRoasterButton">Add Roaster</button>
-        <!-- Edit Sections -->
-        <button type="button" class="btn btn-primary" id="editSectionsButton">Edit Sections</button>
+    <div id="resumeDisplayArea" style="display: none">
+      <div id="resumeContent"></div>
+      <button type="button" class="btn btn-primary" id="downloadPdfButton">
+        Download PDF
+      </button>
+      <!-- Add Comment button -->
+      <button
+        type="button"
+        class="btn btn-primary"
+        id="addCommentToResumeButton"
+      >
+        Add Comment
+      </button>
+      <!-- Add Viewer button -->
+      <button type="button" class="btn btn-primary" id="addRoasterButton">
+        Add Roaster
+      </button>
+      <!-- Edit Sections -->
+      <button type="button" class="btn btn-primary" id="editSectionsButton">
+        Edit Sections
+      </button>
     </div>
     <!-- For comments -->
-    <div id="commentDisplayArea" style="display: none;">
-        <div id="commentLog"></div>
+    <div id="commentDisplayArea" style="display: none">
+      <div id="commentLog"></div>
     </div>
+
     <!-- For edit Sections -->
     <div id="editModal" class="modal">
       <div class="modal-content">
-          <span class="close">&times;</span>
-          <h2>Edit Sections</h2>
-          <div id="modalContent"></div>
-          <button id="saveButton">Save</button>
+        <span class="close">&times;</span>
+        <h2>Edit Sections</h2>
+        <div id="modalContent"></div>
+        <button id="saveButton">Save</button>
       </div>
-  </div>
-  <div id="addRoasterModal" class="modal">
-    <div class="modal-content">
+    </div>
+    <div id="addRoasterModal" class="modal">
+      <div class="modal-content">
         <span class="close">&times;</span>
         <h2>Add Roaster</h2>
         <div>
-            <label for="roasterNameInput">Roaster Name:</label>
-            <input type="text" id="roasterNameInput" placeholder="Enter roaster name">
+          <label for="roasterNameInput">Roaster Name:</label>
+          <input
+            type="text"
+            id="roasterNameInput"
+            placeholder="Enter roaster name"
+          />
         </div>
         <button id="saveRoasterButton">Add Roaster</button>
+      </div>
     </div>
-</div>
-
-</body>
+  </body>
 </html>
