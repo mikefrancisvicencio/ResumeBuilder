@@ -1,6 +1,6 @@
 /**
  * @typedef {Object} ResumeFormData
- * @property {string | undefined} name
+ * @property {string | undefined} nameInput
  * @property {string | undefined} phone
  * @property {string | undefined} linkedin
  * @property {string | undefined} github

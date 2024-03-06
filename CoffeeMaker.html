@@ -260,7 +260,7 @@ Certification 1: Front-End Web Development with React, Coursera<br>Certification
     </button>
     <!-- My Resumes button -->
     <button type="button" class="btn btn-primary" id="addCommentButton">
-      My Resumes
+      View Comments
     </button>
 
     <!-- Display Area for Generated Resume -->
@@ -285,6 +285,15 @@ Certification 1: Front-End Web Development with React, Coursera<br>Certification
       <button type="button" class="btn btn-primary" id="editSectionsButton">
         Edit Sections
       </button>
+      <button
+        type="button"
+        class="btn btn-secondary"
+        data-bs-dismiss="modal"
+        onclick="closeResumeDisplay()"
+        id="closeResumeButton"
+      >
+        Close
+      </button>
     </div>
     <!-- For comments -->
     <div id="commentDisplayArea" style="display: none">
@@ -294,7 +303,7 @@ Certification 1: Front-End Web Development with React, Coursera<br>Certification
     <!-- For edit Sections -->
     <div id="editModal" class="modal">
       <div class="modal-content">
-        <span class="close">&times;</span>
+        <span class="close" onclick="closeEditDisplay()">&times;</span>
         <h2>Edit Sections</h2>
         <div id="modalContent"></div>
         <button id="saveButton">Save</button>
@@ -305,14 +314,20 @@ Certification 1: Front-End Web Development with React, Coursera<br>Certification
         <span class="close">&times;</span>
         <h2>Add Roaster</h2>
         <div>
-          <label for="roasterNameInput">Roaster Name:</label>
+          <label for="roasterNameInput">Name: </label>
           <input
             type="text"
             id="roasterNameInput"
             placeholder="Enter roaster name"
           />
+          <label for="roasterEmail">Email:</label>
+          <input
+            type="text"
+            id="roasterEmail"
+            placeholder="Enter roaster email"
+          />
         </div>
-        <button id="saveRoasterButton">Add Roaster</button>
+        <button id="saveButton">Add Roaster</button>
       </div>
     </div>
   </body>

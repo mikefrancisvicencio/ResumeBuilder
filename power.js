@@ -130,6 +130,10 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("New user and resume created:", newUser, newResume);
   });
 
+  /**
+   * =========================== RESUME DISPLAY ==============================
+   * =========================================================================
+   */
   document
     .getElementById("generateResumeButton")
     .addEventListener("click", () => {
@@ -153,12 +157,16 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("resumeDisplayArea").style.display = "block";
         console.log("Generated resume:", latestResume);
       } else {
+        // if no resume saved, then pop up saying save resume
+        // first when trying to generate a resume
+        alert("Need to save a resume first!");
         document.getElementById("resumeContent").textContent =
           "No resumes found.";
         document.getElementById("resumeDisplayArea").style.display = "none";
       }
     });
 
+  // view comments message
   document.getElementById("addCommentButton").addEventListener("click", () => {
     if (dbTemp.resumes.length > 0) {
       const firstResume = dbTemp.resumes[0];
@@ -274,6 +282,15 @@ function saveModalChanges() {
   currentEditingResumeId = null;
 }
 
+// document
+// .querySelector("#editModal .close")
+// .addEventListener("click", function () {
+//   document.getElementById("editModal").style.display = "none";
+// });
+function closeEditDisplay() {
+  document.getElementById("editModal").style.display = "none";
+}
+
 function generateResumePreview(resumeSections, resumeComments) {
   const previewArea = document.getElementById("resumeContent");
   const commentArea = document.getElementById("commentDisplayArea");
@@ -295,20 +312,16 @@ function generateResumePreview(resumeSections, resumeComments) {
     commentArea.style.display = "none";
   }
 }
-// const previewArea = document.getElementById('resumeContent');
-// const commentArea = document.getElementById('commentDisplayArea');
-// previewArea.innerHTML = '';
-// commentArea.innerHTML = '';
-// resumeSections.forEach(section => {
-//     previewArea.innerHTML += section.generateHTML();
-// });
-// if (resumeComments.length > 0) {
-//     const commentsHTML = resumeComments.map(comment => `<p><strong>${comment.User.getName()}:</strong> ${comment.text}</p>`).join('');
-//     commentArea.innerHTML = `<div class="section"><h4>Comments:</h4>${commentsHTML}</div>`;
-//     commentArea.style.display = 'block';
-// } else {
-//     commentArea.style.display = 'none';
-// }
+
+// Event listener for closing the resume display modal
+// document
+//   .querySelector("#resumeDisplayArea .close")
+//   .addEventListener("click", function () {
+//     document.getElementById("resumeDisplayArea").style.display = "none";
+//   });
+function closeResumeDisplay() {
+  document.getElementById("resumeDisplayArea").style.display = "none";
+}
 
 function downloadPDF() {
   const jsPDF = window.jspdf.jsPDF;
@@ -318,7 +331,7 @@ function downloadPDF() {
     onclone: (clonedDoc) => {
       clonedDoc
         .querySelectorAll(
-          "#downloadPdfButton, #addCommentToResumeButton, #addRoasterButton, #editSectionsButton"
+          "#downloadPdfButton, #addCommentToResumeButton, #addRoasterButton, #editSectionsButton, #closeResumeButton"
         )
         .forEach((elem) => (elem.style.display = "none"));
     },
@@ -330,8 +343,8 @@ function downloadPDF() {
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF({
         orientation: "portrait",
-        unit: "in", 
-        format: "letter", 
+        unit: "in",
+        format: "letter",
       });
       // Calculate the scaling factor to fit the canvas image within 8.5 x 11 inches
       const imgWidth = 8.5;

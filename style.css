@@ -64,6 +64,9 @@ label {
   display: block;
   margin-top: 10px;
 }
+/* label .nameInput {
+  font-size: 15px;
+} */
 
 /* addding primary button styling */
 .btn-primary {
@@ -89,9 +92,9 @@ label {
   height: 80vh;
   border-radius: 7px;
   position: fixed;
-  top: 50%;
+  /* top: 50%; */
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, 0%);
   background-color: rgb(163, 147, 112);
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -104,7 +107,7 @@ label {
 }
 
 /* close (X) button styling */
-.modal-content .close {
+ .close {
   position: absolute;
   top: 0;
   right: 0;
@@ -114,15 +117,15 @@ label {
   font-size: 40px;
   cursor: pointer;
 }
-.modal-content .close:hover {
+.close:hover {
   color: red;
 }
 
 /* edit save button styling */
-.modal-content #saveButton {
+.modal-content #saveButton{
   color: white;
   padding: 5px;
-  font-size: 20px;
+  font-size: 15px;
   cursor: pointer;
   background-color: #7dc1ce;
   border: none;
@@ -135,3 +138,14 @@ label {
 }
 
 /* add roaster styling */
+#addRoasterModal{
+  width: 80%;
+  height: auto;
+  border-radius: 7px;
+  position: fixed;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  background-color: rgb(163, 147, 112);
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
