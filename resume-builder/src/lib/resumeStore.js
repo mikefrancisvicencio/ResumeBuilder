@@ -12,6 +12,7 @@ const useResumeStore = create((set) => ({
   projects: undefined,
   experience: undefined,
   certifications: undefined,
+  comments: [],
 
   resetResume: () =>
     set(() => ({
@@ -53,6 +54,11 @@ const useResumeStore = create((set) => ({
       projects,
       experience,
       certifications,
+    })),
+
+  addComment: (comment) =>
+    set((state) => ({
+      comments: [...state.comments, comment],
     })),
 }));
 

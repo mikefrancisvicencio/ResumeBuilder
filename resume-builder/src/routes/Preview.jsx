@@ -4,10 +4,16 @@ import { Button } from "react-bootstrap";
 import Resume from "../components/Resume";
 import { useNavigate } from "react-router-dom";
 import CreateResumeModal from "../components/CreateResumeModal";
+import AddCommentsModal from "../components/AddCommentsModal";
+import ViewCommentsModal from "../components/ViewCommentsModal";
 
 function Preview() {
   const navigate = useNavigate();
   const [isEditModalShowing, setIsEditModalShowing] = useState(false);
+  const [isAddCommentModalShowing, setIsAddCommentModalShowing] =
+    useState(false);
+  const [isViewCommentModalShowing, setIsViewCommentModalShowing] =
+    useState(false);
 
   return (
     <div className="h-screen overflow-y-scroll">
@@ -24,6 +30,22 @@ function Preview() {
             <CreateResumeModal
               show={isEditModalShowing}
               handleClose={() => setIsEditModalShowing(false)}
+            />
+            {/* add comments =========== */}
+            <Button onClick={() => setIsAddCommentModalShowing(true)}>
+              Add Comment
+            </Button>
+            <AddCommentsModal
+              show={isAddCommentModalShowing}
+              handleClose={() => setIsAddCommentModalShowing(false)}
+            />
+            {/* view comments =========== */}
+            <Button onClick={() => setIsViewCommentModalShowing(true)}>
+              View Comments
+            </Button>
+            <ViewCommentsModal
+              show={isViewCommentModalShowing}
+              handleClose={() => setIsViewCommentModalShowing(false)}
             />
           </div>
 
