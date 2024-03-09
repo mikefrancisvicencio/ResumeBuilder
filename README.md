@@ -7,7 +7,9 @@ CoffeeMaker is a resume builder that simplifies the resume making process by...
 
 ## Contributors
 Hannah Kim
+
 Bolo Erdenebat
+
 Mike Vicencio
 
 ## Installation
@@ -21,6 +23,7 @@ Download Resume: Users can download their resume as a PDF file.
 
 ## Usage
 Right click and open login.html with Live Server to get started.
+
 Note: the Download PDF feature works best when full screened.
 
 ## Dependencies
