@@ -141,9 +141,53 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /**
-   * =========================== RESUME DISPLAY ==============================
+   * =========================== MAIN BUTTONS  ==============================
    * =========================================================================
    */
+  // main --> generate resume
+  function generateResumePreview(resumeSections, resumeComments) {
+    const previewArea = document.getElementById("resumeContent");
+    const commentArea = document.getElementById("commentDisplayArea");
+    previewArea.innerHTML = "";
+    commentArea.innerHTML = "";
+    resumeSections.forEach((section) => {
+      previewArea.innerHTML += section.generateHTML();
+    });
+    if (resumeComments.length > 0) {
+      const commentsHTML = resumeComments
+        .map(
+          (comment) =>
+            `<p><strong>${comment.User.getName()}:</strong> ${comment.text}</p>`
+        )
+        .join("");
+      commentArea.innerHTML = `<div class="section"><h4>Comments:</h4>${commentsHTML}</div> <span class="close" onclick="closeCommentDisplay()">&times;</span>
+    `;
+      commentArea.style.display = "block";
+    } else {
+      commentArea.style.display = "none";
+    }
+  }
+
+  // main --> view comments
+  document
+    .getElementById("viewCommentsButton")
+    .addEventListener("click", () => {
+      if (dbTemp.resumes.length > 0) {
+        const firstResume = dbTemp.resumes[0];
+        const commentText =
+          document.getElementById("comments").value ||
+          "Please let me know how I can make my resume better";
+        const newComment = new Comment(
+          new User(firstResume.owner.name),
+          commentText
+        );
+        firstResume.comments.push(newComment);
+        generateResumePreview(firstResume.sections, firstResume.comments);
+        console.log("Added comment to resume:", newComment);
+      } else {
+        alert("Need to save a resume first!");
+      }
+    });
 
   // sub --> generate --> allowed viewers pg
   document.getElementById("subGenerateButton").addEventListener("click", () => {
@@ -154,7 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
       dbTemp.resumeIds.push(latestResume.resumeId);
       dbTemp.resumes.push(latestResume);
 
-      // Get the allowed viewers from the input field and add them to the resume
+      // get allowed viewers from input field and add them to resume
       const allowedViewersInput = document.getElementById(
         "allowedViewersInput"
       ).value;
@@ -176,28 +220,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // MAIN view comments message
-  document
-    .getElementById("viewCommentsButton")
-    .addEventListener("click", () => {
-      if (dbTemp.resumes.length > 0) {
-        const firstResume = dbTemp.resumes[0];
-        const commentText =
-          document.getElementById("comments").value ||
-          "Please let me know how I can make my resume better";
-        const newComment = new Comment(
-          new User(firstResume.owner.name),
-          commentText
-        );
-        firstResume.comments.push(newComment);
-        generateResumePreview(firstResume.sections, firstResume.comments);
-        console.log("Added comment to resume:", newComment);
-      } else {
-        alert("Need to save a resume first!");
-      }
-    });
-
-  // sub --> Resume --> within resume display
+  // sub --> generate --> within resume display --> add comments
   document
     .getElementById("addCommentToResumeButton")
     .addEventListener("click", () => {
@@ -216,6 +239,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
+  // sub --> generate --> within resume display --> edit sections
   document
     .getElementById("editSectionsButton")
     .addEventListener("click", () => {
@@ -225,6 +249,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
+  // sub --> generate --> within resume display --> download PDF
   const downloadButton = document.getElementById("downloadPdfButton");
   if (downloadButton) {
     downloadButton.addEventListener("click", downloadPDF);
@@ -233,10 +258,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
- /**
-   * =========================== EDIT SECTION  ===============================
-   * =========================================================================
-   */
+/**
+ * =========================== EDIT SECTION  ===============================
+ * =========================================================================
+ */
 // generate --> resume display --> edit
 let currentEditingResumeId = null;
 
@@ -266,13 +291,6 @@ function extractTextContent(htmlString) {
 }
 
 function attachModalEventHandlers() {
-  // const closeButton = document.querySelector(".close");
-  // const modal = document.getElementById("editModal");
-  // window.onclick = (event) => {
-  //   if (event.target === modal || event.target === closeButton) {
-  //     modal.style.display = "none";
-  //   }
-  // };
   const saveButton = document.getElementById("saveButton");
   if (saveButton) {
     saveButton.removeEventListener("click", saveModalChanges);
@@ -303,30 +321,6 @@ function saveModalChanges() {
   currentEditingResumeId = null;
 }
 
-// main --> generate resume preview
-function generateResumePreview(resumeSections, resumeComments) {
-  const previewArea = document.getElementById("resumeContent");
-  const commentArea = document.getElementById("commentDisplayArea");
-  previewArea.innerHTML = "";
-  commentArea.innerHTML = "";
-  resumeSections.forEach((section) => {
-    previewArea.innerHTML += section.generateHTML();
-  });
-  if (resumeComments.length > 0) {
-    const commentsHTML = resumeComments
-      .map(
-        (comment) =>
-          `<p><strong>${comment.User.getName()}:</strong> ${comment.text}</p>`
-      )
-      .join("");
-    commentArea.innerHTML = `<div class="section"><h4>Comments:</h4>${commentsHTML}</div> <span class="close" onclick="closeCommentDisplay()">&times;</span>
-    `;
-    commentArea.style.display = "block";
-  } else {
-    commentArea.style.display = "none";
-  }
-}
-
 // CLOSING  ==========================================================
 function closeResumeDisplay() {
   document.getElementById("resumeDisplayArea").style.display = "none";
@@ -340,11 +334,49 @@ function closeCommentDisplay() {
   document.getElementById("commentDisplayArea").style.display = "none";
 }
 
+/**
+ * ============================= ADD ROASTER ===============================
+ * =========================================================================
+ */
+// generate --> resume display --> add roaster
+// Event listener for opening Add Roaster modal
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("addRoasterButton").addEventListener("click", () => {
+    document.getElementById("addRoasterModal").style.display = "block";
+  });
 
- /**
-   * =========================== PDF GENERATING ==============================
-   * =========================================================================
-   */
+  // Event listener for closing Add Roaster modal
+  document
+    .querySelector("#addRoasterModal .close")
+    .addEventListener("click", function () {
+      document.getElementById("addRoasterModal").style.display = "none";
+    });
+
+  // Event listener for saving roaster
+  document
+    .getElementById("saveRoasterButton")
+    .addEventListener("click", function () {
+      var roasterName = document.getElementById("roasterNameInput").value;
+      if (roasterName) {
+        // Assuming you want to add roaster to first resume
+        if (dbTemp.resumes.length > 0) {
+          const firstResume = dbTemp.resumes[0];
+          firstResume.allowedViewers.push(roasterName);
+          console.log(`Added roaster: ${roasterName}`);
+          // Update resume preview to display new roaster
+          generateResumePreview(firstResume.sections, firstResume.comments);
+        }
+      }
+      // Clear input field and close modal
+      document.getElementById("roasterNameInput").value = "";
+      document.getElementById("addRoasterModal").style.display = "none";
+    });
+});
+
+/**
+ * =========================== PDF GENERATING ==============================
+ * =========================================================================
+ */
 function downloadPDF() {
   const jsPDF = window.jspdf.jsPDF;
   const resumeDisplayArea = document.getElementById("resumeDisplayArea");
@@ -368,7 +400,7 @@ function downloadPDF() {
         unit: "in",
         format: "letter",
       });
-      // Calculate the scaling factor to fit the canvas image within 8.5 x 11 inches
+      // calculate scaling to fit canvas image within 8.5 x 11 inches
       const imgWidth = 8.5;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
       pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
@@ -379,66 +411,3 @@ function downloadPDF() {
       console.error("Error generating PDF: ", error);
     });
 }
-
- /**
-   * ============================= ADD ROASTER ===============================
-   * =========================================================================
-   */
-// generate --> resume display --> add roaster 
-// Event listener for opening the Add Roaster modal
-document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("addRoasterButton").addEventListener("click", () => {
-    document.getElementById("addRoasterModal").style.display = "block";
-  });
-
-  // Event listener for closing the Add Roaster modal
-  document
-    .querySelector("#addRoasterModal .close")
-    .addEventListener("click", function () {
-      document.getElementById("addRoasterModal").style.display = "none";
-    });
-
-  // Event listener for saving the roaster
-  document
-    .getElementById("saveRoasterButton")
-    .addEventListener("click", function () {
-      var roasterName = document.getElementById("roasterNameInput").value;
-      if (roasterName) {
-        // Assuming you want to add the roaster to the first resume
-        if (dbTemp.resumes.length > 0) {
-          const firstResume = dbTemp.resumes[0];
-          firstResume.allowedViewers.push(roasterName);
-          console.log(`Added roaster: ${roasterName}`);
-          // Update the resume preview to display the new roaster
-          generateResumePreview(firstResume.sections, firstResume.comments);
-        }
-      }
-      // Clear the input field and close the modal
-      document.getElementById("roasterNameInput").value = "";
-      document.getElementById("addRoasterModal").style.display = "none";
-    });
-});
-
-// function saveResume(resume) {
-//     return db.collection("resumes").doc(resume.resumeId.toString()).set(resume)
-//         .then(() => console.log("Resume saved successfully!"))
-//         .catch((error) => console.error("Error saving resume: ", error));
-// }
-// function loginUser(email, password) {
-//     signInWithEmailAndPassword(auth, email, password)
-//         .then((userCredential) => {
-//             console.log("User logged in:", userCredential.user);
-//         })
-//         .catch((error) => {
-//             console.error("Error logging in user:", error);
-//         });
-// }
-// function logoutUser() {
-//     signOut(auth)
-//         .then(() => {
-//             console.log("User logged out");
-//         })
-//         .catch((error) => {
-//             console.error("Error logging out user:", error);
-//         });
-// }
