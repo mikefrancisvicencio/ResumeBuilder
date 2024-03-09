@@ -1,12 +1,10 @@
 body {
   background-image: url("Background.webp");
   background-size: cover;
-
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-
   font-family: Avenir, Helvetica, sans-serif;
 }
 
@@ -19,21 +17,11 @@ body {
   margin-bottom: 220px;
 }
 
-
 #resumeContent{
   margin-bottom: 20px;
 }
 
 #commentDisplayArea {
-  /* background-color: #aafda9;
-  border-radius: 5px;
-  padding: 20px;
-  margin-left: 20px;
-  margin-top: 100px;
-  width: 300px;
-  height: 1056px;
-  box-sizing: border-box;
-  overflow-y: auto; } */
   background-color: #e8d0b5;
   border-radius: 5px;
   padding: 20px;
@@ -44,9 +32,8 @@ body {
   overflow-y: auto;
   position: fixed;
   bottom: 0;
-  height: auto; /* Adjust the height as needed, or keep it auto */
-  max-height: 200px; /* Maximum height, after which scroll will appear */
-  /* z-index: 1000; Ensure it stays on top of other elements */
+  height: auto; 
+  max-height: 200px; 
 }
 #commentDisplayArea .close {
   position: absolute;
@@ -98,11 +85,6 @@ p{
   margin-bottom: 0px;
 }
 
-/* hr{
-  margin-top: 10px;
-  margin-bottom: 5px;
-} */
-
 label {
   display: block;
   font-size: 20px;
@@ -132,7 +114,6 @@ label {
   height: 80vh;
   border-radius: 7px;
   position: fixed;
-  /* top: 50%; */
   left: 50%;
   transform: translate(-50%, 0%);
   background-color: rgb(163, 147, 112);
@@ -188,14 +169,4 @@ label {
   background-color: rgb(163, 147, 112);
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-ul {
-  list-style-position: outside; /* Ensures bullets are outside the content flow */
-  margin-left: 0; /* Removes default margin */
-  padding-left: 20px; /* Adjust as necessary for proper bullet indentation */
-}
-
-li {
-  margin-bottom: 10px; /* Adjust as necessary for space between list items */
 }

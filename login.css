@@ -1,9 +1,9 @@
 body {
   background-image: url("Background.webp");
-  background-size: cover; /* Cover the entire page */
+  background-size: cover; 
 
-  height: 100vh; /* Set the height to fill the screen */
-  margin: 10; /* Remove default margin */
+  height: 100vh; 
+  margin: 10;
 
   font-family: Avenir, Helvetica, sans-serif;
 }
@@ -13,7 +13,7 @@ body {
   margin: auto;
   padding: 20px;
   text-align: center;
-  background-color: #f8f9fa; /* Light gray background */
+  background-color: #f8f9fa; 
   border: 1px solid #ddd;
   border-radius: 5px;
   margin-top: 100px;
